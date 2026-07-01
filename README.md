@@ -1,0 +1,3458 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Garden of Eden — Управление</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #A8E6CF 0%, #C4B5FD 50%, #D8B4FE 100%);
+            background-attachment: fixed;
+            color: #1e293b;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #7C3AED; border-radius: 10px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .page { display: none; animation: fadeIn 0.4s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .brand-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 4.5rem;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(107, 156, 138, 0.6), 0 0 60px rgba(107, 156, 138, 0.3);
+            text-align: center;
+            margin: 30px 0 10px 0;
+            letter-spacing: 2px;
+            font-weight: 400;
+        }
+        .brand-sub { text-align: center; color: rgba(255,255,255,0.8); font-size: 1rem; margin-bottom: 30px; font-weight: 300; letter-spacing: 4px; }
+        
+        .btn {
+            padding: 12px 32px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(8px);
+            color: #1e293b;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        .btn:hover { transform: translateY(-2px); background: rgba(255,255,255,0.35); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .btn-primary { background: #7C3AED; color: #fff; }
+        .btn-primary:hover { background: #6D28D9; }
+        .btn-success { background: #059669; color: #fff; }
+        .btn-success:hover { background: #047857; }
+        .btn-danger { background: #DC2626; color: #fff; }
+        .btn-danger:hover { background: #B91C1C; }
+        .btn-warning { background: #D97706; color: #fff; }
+        .btn-warning:hover { background: #B45309; }
+        .btn-info { background: #3B82F6; color: #fff; }
+        .btn-info:hover { background: #2563EB; }
+        .btn-sm { padding: 6px 16px; font-size: 0.85rem; }
+        .btn-md { padding: 10px 24px; font-size: 0.95rem; }
+        .btn-xs { padding: 4px 12px; font-size: 0.75rem; }
+        .btn-lg { padding: 16px 40px; font-size: 1.2rem; }
+        .btn-block { width: 100%; justify-content: center; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+        
+        .card {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .card:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.12); }
+        .card-title { font-size: 1.1rem; font-weight: 700; color: #0f172a; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+        
+        .nav-grid { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 20px 0 40px; }
+        .nav-grid .btn { min-width: 130px; justify-content: center; font-size: 0.95rem; padding: 12px 20px; }
+        
+        /* Входная страница */
+        .login-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        .login-grid .btn {
+            min-width: 180px;
+            justify-content: center;
+            font-size: 1.1rem;
+            padding: 16px 32px;
+        }
+        
+        .info-section {
+            max-width: 800px;
+            margin: 30px auto;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .info-section h3 { font-family: 'Great Vibes', cursive; font-size: 2rem; color: #2D6A4F; text-align: center; }
+        .info-section p, .info-section li { color: #1e293b; line-height: 1.7; }
+        .info-section ul { padding-left: 20px; }
+        
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 0.9rem; color: #334155; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid rgba(124, 58, 237, 0.15);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            background: rgba(255,255,255,0.7);
+            transition: border 0.3s;
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: #7C3AED;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+        .form-group textarea { min-height: 80px; resize: vertical; }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: #94a3b8; }
+        .form-group input:disabled { opacity: 0.6; cursor: not-allowed; }
+        
+        .admins-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-top: 16px; }
+        .admin-card {
+            background: rgba(255,255,255,0.8);
+            border-radius: 16px;
+            padding: 14px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        .admin-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .admin-card .tag { font-weight: 700; font-size: 1.05rem; color: #0f172a; }
+        .admin-card .category { font-size: 0.75rem; color: #64748b; background: rgba(124, 58, 237, 0.1); padding: 2px 12px; border-radius: 20px; display: inline-block; margin: 4px 0; }
+        .admin-card .rating { font-size: 1.2rem; font-weight: 700; margin: 6px 0; }
+        .rating-green { color: #22C55E; }
+        .rating-yellow { color: #EAB308; }
+        .rating-red { color: #EF4444; }
+        
+        .admin-card .rest-badge {
+            background: #D97706;
+            color: #fff;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 6px;
+            box-shadow: 0 2px 10px rgba(217, 119, 6, 0.3);
+            animation: pulseRest 2s infinite;
+        }
+        .admin-card .rest-badge .rest-until {
+            font-size: 0.65rem;
+            opacity: 0.9;
+        }
+        @keyframes pulseRest {
+            0%, 100% { transform: scale(1); box-shadow: 0 2px 10px rgba(217, 119, 6, 0.3); }
+            50% { transform: scale(1.03); box-shadow: 0 4px 20px rgba(217, 119, 6, 0.5); }
+        }
+        
+        .stars { display: flex; gap: 8px; justify-content: center; font-size: 2.8rem; cursor: pointer; user-select: none; }
+        .stars .star { color: #d1d5db; transition: all 0.2s ease; }
+        .stars .star.active { color: #fbbf24; transform: scale(1.1); }
+        .stars .star:hover { color: #fbbf24; transform: scale(1.2); }
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: #fff;
+            border-radius: 24px;
+            max-width: 600px;
+            width: 90%;
+            padding: 30px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        .modal h2 { font-family: 'Great Vibes', cursive; font-size: 2rem; color: #2D6A4F; text-align: center; margin-bottom: 16px; }
+        .modal .dialog-message {
+            padding: 8px 12px;
+            margin: 4px 0;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+        .modal .dialog-message.user { background: #7C3AED; color: #fff; text-align: right; }
+        .modal .dialog-message.admin { background: #e2e8f0; color: #0f172a; }
+        .modal .dialog-message.system { background: rgba(239, 68, 68, 0.1); color: #DC2626; text-align: center; }
+        .modal .dialog-message.banned { background: rgba(220, 38, 38, 0.2); color: #DC2626; text-align: center; font-weight: 700; border: 2px solid #DC2626; }
+        
+        .chat-container { display: flex; flex-direction: column; height: 550px; background: rgba(255,255,255,0.6); backdrop-filter: blur(8px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.3); overflow: hidden; position: relative; }
+        .chat-header { padding: 12px 20px; background: rgba(124, 58, 237, 0.15); border-bottom: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .chat-header .info { font-size: 0.85rem; color: #64748b; }
+        .chat-header .info strong { color: #0f172a; }
+        .chat-messages { flex: 1; padding: 16px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .chat-message { max-width: 70%; padding: 10px 16px; border-radius: 16px; font-size: 0.95rem; word-wrap: break-word; animation: fadeIn 0.2s ease; }
+        .chat-message.user { align-self: flex-end; background: #7C3AED; color: #fff; border-bottom-right-radius: 4px; }
+        .chat-message.admin { align-self: flex-start; background: rgba(255,255,255,0.85); color: #0f172a; border-bottom-left-radius: 4px; border: 1px solid rgba(0,0,0,0.08); }
+        .chat-message.system { align-self: center; background: rgba(239, 68, 68, 0.15); color: #DC2626; font-size: 0.8rem; padding: 6px 16px; border-radius: 20px; max-width: 90%; text-align: center; }
+        .chat-message.warn { align-self: center; background: rgba(217, 119, 6, 0.15); color: #D97706; font-size: 0.8rem; padding: 6px 16px; border-radius: 20px; max-width: 90%; text-align: center; border: 1px solid rgba(217, 119, 6, 0.3); }
+        .chat-message.banned { align-self: center; background: rgba(220, 38, 38, 0.2); color: #DC2626; font-size: 0.9rem; padding: 10px 20px; border-radius: 20px; max-width: 90%; text-align: center; border: 2px solid #DC2626; font-weight: 700; }
+        .chat-message .time { font-size: 0.65rem; opacity: 0.6; margin-top: 4px; display: block; }
+        .chat-message .file-attachment {
+            display: block;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            margin-top: 4px;
+            font-size: 0.8rem;
+        }
+        .chat-message.user .file-attachment { background: rgba(255,255,255,0.2); }
+        .chat-message img { max-width: 200px; border-radius: 8px; margin-top: 4px; }
+        .chat-message video { max-width: 200px; border-radius: 8px; margin-top: 4px; }
+        .chat-message audio { max-width: 200px; margin-top: 4px; }
+        
+        .chat-input-area { display: flex; gap: 10px; padding: 12px 20px; background: rgba(255,255,255,0.3); border-top: 1px solid rgba(255,255,255,0.2); flex-wrap: wrap; }
+        .chat-input-area .input-wrapper { flex: 1; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .chat-input-area input[type="text"] { flex: 1; padding: 10px 16px; border: 2px solid rgba(124, 58, 237, 0.15); border-radius: 30px; font-size: 0.95rem; background: rgba(255,255,255,0.7); color: #1e293b; min-width: 120px; }
+        .chat-input-area input[type="text"]:focus { outline: none; border-color: #7C3AED; }
+        .chat-input-area input[type="text"]:disabled { opacity: 0.5; cursor: not-allowed; }
+        .chat-input-area input[type="text"]::placeholder { color: #94a3b8; }
+        .chat-input-area .file-btn {
+            padding: 8px 14px;
+            border-radius: 30px;
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+            color: #7C3AED;
+        }
+        .chat-input-area .file-btn:hover { background: rgba(124, 58, 237, 0.2); }
+        .chat-input-area .btn { border-radius: 30px; padding: 10px 24px; }
+        
+        .chat-footer-actions {
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.2);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .chat-footer-actions .btn {
+            min-width: 150px;
+            justify-content: center;
+            padding: 12px 24px;
+            font-size: 1rem;
+        }
+        .chat-footer-actions .btn-danger { background: #DC2626; color: #fff; }
+        .chat-footer-actions .btn-danger:hover { background: #B91C1C; }
+        
+        .panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .panel-grid { grid-template-columns: 1fr; } .brand-title { font-size: 3rem; } .admins-grid { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 480px) { .admins-grid { grid-template-columns: 1fr; } .nav-grid .btn { min-width: 110px; font-size: 0.85rem; padding: 10px 16px; } }
+        
+        .progress-container { margin: 8px 0; }
+        .progress-label { display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: 600; }
+        .progress-bar { width: 100%; height: 10px; background: rgba(0,0,0,0.06); border-radius: 20px; overflow: hidden; margin-top: 4px; }
+        .progress-bar .fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg, #059669, #34D399); transition: width 0.6s ease; width: 0%; }
+        .progress-bar .fill.danger { background: linear-gradient(90deg, #DC2626, #F87171); }
+        
+        .badge { background: #EF4444; color: #fff; border-radius: 50%; padding: 2px 8px; font-size: 0.7rem; font-weight: 700; margin-left: 6px; }
+        
+        .tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+        .tabs .btn { border-radius: 30px; padding: 8px 20px; font-size: 0.9rem; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .mt-16 { margin-top: 16px; }
+        .mb-16 { margin-bottom: 16px; }
+        .text-center { text-align: center; }
+        .text-muted { color: #64748b; font-size: 0.85rem; }
+        
+        .warn-badge { background: #D97706; color: #fff; padding: 2px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; }
+        .banned-badge { background: #DC2626; color: #fff; padding: 2px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; }
+        .rest-badge { 
+            background: #D97706; 
+            color: #fff; 
+            padding: 3px 14px; 
+            border-radius: 20px; 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+            display: inline-block;
+            box-shadow: 0 2px 10px rgba(217, 119, 6, 0.3);
+            animation: pulseRest 2s infinite;
+        }
+        @keyframes pulseRest {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .rest-request-card {
+            background: rgba(255,255,255,0.6);
+            border-radius: 16px;
+            padding: 16px;
+            margin: 8px 0;
+            border: 1px solid rgba(217, 119, 6, 0.3);
+        }
+        .rest-request-card .rest-admin { font-weight: 700; color: #7C3AED; }
+        .rest-request-card .rest-reason { color: #475569; }
+        .rest-request-card .rest-date { color: #94a3b8; font-size: 0.8rem; }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 16px;
+            color: #fff;
+            font-weight: 600;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            max-width: 400px;
+        }
+        .notification.success { background: #059669; }
+        .notification.error { background: #DC2626; }
+        .notification.warning { background: #D97706; }
+        .notification.info { background: #7C3AED; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
+        
+        .spam-warning {
+            color: #DC2626;
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 4px;
+            display: none;
+            background: rgba(220, 38, 38, 0.1);
+        }
+        .spam-warning.show { display: block; }
+        .privacy-warning {
+            color: #D97706;
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 4px;
+            display: none;
+            background: rgba(217, 119, 6, 0.1);
+        }
+        .privacy-warning.show { display: block; }
+        
+        #ownerLoginError, #adminLoginError {
+            color: #DC2626;
+            display: none;
+            margin-bottom: 12px;
+            padding: 10px;
+            background: rgba(220, 38, 38, 0.1);
+            border-radius: 12px;
+        }
+        #ownerLoginError.show, #adminLoginError.show { display: block; }
+        
+        .admin-row-actions .btn {
+            min-width: 70px;
+            justify-content: center;
+        }
+        .admin-row-actions .btn-danger { background: #DC2626; color: #fff; }
+        .admin-row-actions .btn-danger:hover { background: #B91C1C; }
+        .admin-row-actions .btn-warning { background: #D97706; color: #fff; }
+        .admin-row-actions .btn-warning:hover { background: #B45309; }
+        
+        .dialog-item {
+            padding: 10px 14px;
+            margin: 6px 0;
+            background: rgba(255,255,255,0.5);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .dialog-item:hover {
+            background: rgba(255,255,255,0.8);
+            transform: translateX(4px);
+        }
+        .dialog-item .dialog-preview {
+            font-size: 0.85rem;
+            color: #475569;
+            margin-top: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .dialog-item .dialog-admin {
+            font-weight: 600;
+            color: #7C3AED;
+        }
+        
+        .no-back-btn .btn-back {
+            display: none !important;
+        }
+        .no-back-btn .chat-header .btn-back {
+            display: none !important;
+        }
+
+        .broadcast-area {
+            background: rgba(124, 58, 237, 0.05);
+            border: 2px dashed rgba(124, 58, 237, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 10px;
+        }
+        .broadcast-area textarea {
+            min-height: 100px;
+        }
+
+        .admin-login-area {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .stat-item {
+            background: rgba(255,255,255,0.6);
+            border-radius: 16px;
+            padding: 14px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .stat-item .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #7C3AED;
+        }
+        .stat-item .stat-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .price-card {
+            background: rgba(255,255,255,0.6);
+            border-radius: 16px;
+            padding: 14px;
+            border: 1px solid rgba(255,255,255,0.3);
+            margin: 6px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .price-card .price-title {
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .price-card .price-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #059669;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .form-row .form-group {
+            flex: 1;
+            min-width: 140px;
+            margin-bottom: 0;
+        }
+        .form-row .btn {
+            flex-shrink: 0;
+        }
+
+        .rest-requests-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .chat-header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .chat-header-actions .btn {
+            padding: 6px 14px;
+            font-size: 0.8rem;
+        }
+
+        .rest-list-section {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        .rest-list-section .rest-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(217, 119, 6, 0.3);
+            margin: 6px 0;
+        }
+        .rest-list-section .rest-item .rest-tag {
+            font-weight: 700;
+            color: #D97706;
+        }
+        .rest-list-section .rest-item .rest-info {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+        .rest-list-section .rest-empty {
+            text-align: center;
+            color: #64748b;
+            padding: 20px;
+        }
+
+        .btn-open-dialog {
+            padding: 10px 28px;
+            font-size: 0.95rem;
+            min-width: 100px;
+            justify-content: center;
+        }
+
+        .ticket-item {
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 12px;
+            margin: 6px 0;
+            border: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .ticket-item:hover {
+            background: rgba(255,255,255,0.8);
+            transform: translateX(4px);
+        }
+        .ticket-item .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .ticket-item .ticket-status {
+            font-size: 0.7rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .ticket-item .ticket-status.new { background: #EF4444; color: #fff; }
+        .ticket-item .ticket-status.answered { background: #22C55E; color: #fff; }
+        .ticket-item .ticket-preview {
+            font-size: 0.85rem;
+            color: #475569;
+            margin-top: 4px;
+        }
+        .ticket-item .ticket-from {
+            font-weight: 600;
+            color: #7C3AED;
+        }
+        .ticket-item .ticket-time {
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+        
+        .ticket-reply-area {
+            margin-top: 12px;
+            padding: 16px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+        }
+        .ticket-reply-area textarea {
+            min-height: 60px;
+        }
+        .ticket-reply-area .btn {
+            margin-top: 8px;
+        }
+        .ticket-messages {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+        }
+        .ticket-message {
+            padding: 8px 14px;
+            margin: 4px 0;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            max-width: 80%;
+        }
+        .ticket-message.user { 
+            background: #7C3AED; 
+            color: #fff; 
+            margin-left: auto;
+            text-align: right;
+            border-bottom-right-radius: 4px;
+        }
+        .ticket-message.admin { 
+            background: rgba(255,255,255,0.85); 
+            color: #0f172a;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-bottom-left-radius: 4px;
+        }
+        .ticket-message.system { 
+            background: rgba(239, 68, 68, 0.1); 
+            color: #DC2626; 
+            text-align: center;
+            max-width: 100%;
+        }
+        .ticket-message .ticket-msg-time { 
+            font-size: 0.65rem; 
+            opacity: 0.6; 
+            margin-top: 2px; 
+            display: block; 
+        }
+        
+        .ticket-message .file-attachment {
+            display: block;
+            padding: 6px 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            margin-top: 4px;
+            font-size: 0.8rem;
+        }
+        .ticket-message.user .file-attachment { background: rgba(255,255,255,0.15); }
+        .ticket-message img { max-width: 150px; border-radius: 6px; margin-top: 4px; }
+        .ticket-message video { max-width: 150px; border-radius: 6px; margin-top: 4px; }
+        .ticket-message audio { max-width: 150px; margin-top: 4px; }
+        
+        .ticket-messages-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .warn-reason {
+            font-size: 0.75rem;
+            color: #DC2626;
+            margin-left: 6px;
+        }
+        
+        .price-section {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        .price-section .price-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .norm-edit {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 8px;
+            padding: 12px;
+            background: rgba(124, 58, 237, 0.05);
+            border-radius: 12px;
+        }
+        .norm-edit .norm-input {
+            width: 60px;
+            padding: 6px 10px;
+            border: 2px solid rgba(124, 58, 237, 0.15);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: rgba(255,255,255,0.7);
+            color: #1e293b;
+            text-align: center;
+        }
+        .norm-edit .norm-input:focus {
+            outline: none;
+            border-color: #7C3AED;
+        }
+        .norm-edit label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .dialog-action-btn {
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        .dialog-action-btn.complete {
+            background: #22C55E;
+            color: #fff;
+        }
+        .dialog-action-btn.complete:hover {
+            background: #16A34A;
+        }
+        
+        /* Стили для анкеты */
+        .anketa-section {
+            margin-top: 16px;
+            padding: 16px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 16px;
+            border: 1px solid rgba(124, 58, 237, 0.1);
+        }
+        .anketa-section .anketa-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #7C3AED;
+            margin-bottom: 8px;
+        }
+        .anketa-section .anketa-desc {
+            font-size: 0.9rem;
+            color: #475569;
+            margin-bottom: 12px;
+        }
+        .anketa-section .form-group textarea {
+            min-height: 100px;
+        }
+        .anketa-section .form-group .small-textarea {
+            min-height: 60px;
+        }
+        
+        /* Тикеты в панели владельца */
+        .ticket-card {
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 12px;
+            margin: 6px 0;
+            border: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .ticket-card:hover {
+            background: rgba(255,255,255,0.8);
+            transform: translateX(4px);
+        }
+        .ticket-card .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .ticket-card .ticket-status {
+            font-size: 0.7rem;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .ticket-card .ticket-status.new { background: #EF4444; color: #fff; }
+        .ticket-card .ticket-status.answered { background: #22C55E; color: #fff; }
+        .ticket-card .ticket-preview {
+            font-size: 0.85rem;
+            color: #475569;
+            margin-top: 4px;
+        }
+        .ticket-card .ticket-from {
+            font-weight: 600;
+            color: #7C3AED;
+        }
+        .ticket-card .ticket-time {
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+        
+        .ticket-modal-messages {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+        }
+        .ticket-modal-message {
+            padding: 8px 14px;
+            margin: 4px 0;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            max-width: 80%;
+        }
+        .ticket-modal-message.user { 
+            background: #7C3AED; 
+            color: #fff; 
+            margin-left: auto;
+            text-align: right;
+            border-bottom-right-radius: 4px;
+        }
+        .ticket-modal-message.admin { 
+            background: rgba(255,255,255,0.85); 
+            color: #0f172a;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-bottom-left-radius: 4px;
+        }
+        .ticket-modal-message .ticket-msg-time { 
+            font-size: 0.65rem; 
+            opacity: 0.6; 
+            margin-top: 2px; 
+            display: block; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+
+    <!-- ВХОД -->
+    <div class="page active" id="page-login">
+        <div class="brand-title">The Garden of Eden</div>
+        <div class="brand-sub">✦ райский уголок для общения ✦</div>
+        
+        <div class="login-grid">
+            <button class="btn btn-primary" onclick="loginAsUser()"><i class="fas fa-user"></i> Пользователь</button>
+            <button class="btn btn-success" onclick="loginAsAdmin()"><i class="fas fa-user-shield"></i> Администратор</button>
+            <button class="btn btn-warning" onclick="loginAsOwner()"><i class="fas fa-crown"></i> Владелец</button>
+        </div>
+        
+        <div class="info-section">
+            <h3>🌿 О боте</h3>
+            <p><strong>The Garden of Eden</strong> — это райский уголок для общения с профессиональными администраторами.</p>
+        </div>
+    </div>
+
+    <!-- ГЛАВНАЯ ПОЛЬЗОВАТЕЛЯ -->
+    <div class="page" id="page-home-user">
+        <div class="brand-title">The Garden of Eden</div>
+        <div class="brand-sub">✦ райский уголок для общения ✦</div>
+
+        <div class="nav-grid">
+            <button class="btn" onclick="showPage('anketa')"><i class="fas fa-clipboard-list"></i> Анкетница</button>
+            <button class="btn" onclick="showPage('support')"><i class="fas fa-headset"></i> Техподдержка</button>
+            <button class="btn" onclick="showPage('admins')"><i class="fas fa-users"></i> Список админов</button>
+            <button class="btn btn-warning" onclick="showPage('tgk')"><i class="fas fa-telegram"></i> ТГК</button>
+            <button class="btn btn-info" onclick="showPage('price')"><i class="fas fa-tag"></i> Прайс</button>
+            <button class="btn btn-danger" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+        </div>
+
+        <div class="rest-list-section" id="restListSection">
+            <h3 style="text-align:center;color:#1e293b;margin-bottom:12px;">⏳ Администраторы в ресте</h3>
+            <div id="restListContainer">
+                <div class="rest-empty">Нет администраторов в ресте</div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>🌿 О боте</h3>
+            <p><strong>The Garden of Eden</strong> — это райский уголок для общения с профессиональными администраторами.</p>
+            <br>
+            <h4 style="color:#2D6A4F;">📜 Правила бота</h4>
+            <ul>
+                <li>Будьте вежливы и уважайте друг друга.</li>
+                <li><strong style="color:#DC2626;">Запрещены оскорбления, угрозы и унижения — мгновенный бан!</strong></li>
+                <li>Запрещено спрашивать личную информацию (возраст, юзернейм, телефон, адрес).</li>
+                <li>За нарушение правил — варн (3 варна = бан) или мгновенный бан за тяжкие нарушения.</li>
+                <li>Антиспам — не более 5 сообщений за 10 секунд.</li>
+                <li>Чистка нормы каждую неделю в понедельник. Если норма не выполнена — 1 варн.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ГЛАВНАЯ АДМИНА -->
+    <div class="page" id="page-home-admin">
+        <div class="brand-title">The Garden of Eden</div>
+        <div class="brand-sub">✦ райский уголок для общения ✦</div>
+        <div class="text-center" style="margin-bottom:20px;">
+            <span class="btn btn-success btn-sm">👋 Добро пожаловать, <strong id="adminHomeTag">#admin</strong></span>
+        </div>
+
+        <div class="nav-grid">
+            <button class="btn" onclick="showPage('admin-panel')"><i class="fas fa-user-shield"></i> Моя панель</button>
+            <button class="btn" onclick="showPage('admins')"><i class="fas fa-users"></i> Список админов</button>
+            <button class="btn btn-warning" onclick="showPage('tgk')"><i class="fas fa-telegram"></i> ТГК</button>
+            <button class="btn btn-danger" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+        </div>
+        
+        <div class="info-section">
+            <h3>🌿 О боте</h3>
+            <p><strong>The Garden of Eden</strong> — это райский уголок для общения с профессиональными администраторами.</p>
+        </div>
+    </div>
+
+    <!-- ГЛАВНАЯ ВЛАДЕЛЬЦА -->
+    <div class="page" id="page-home-owner">
+        <div class="brand-title">The Garden of Eden</div>
+        <div class="brand-sub">✦ райский уголок для общения ✦</div>
+        <div class="text-center" style="margin-bottom:20px;">
+            <span class="btn btn-primary btn-sm">👑 Добро пожаловать, <strong>Владелец</strong></span>
+        </div>
+
+        <div class="nav-grid">
+            <button class="btn" onclick="showPage('owner-panel')"><i class="fas fa-crown"></i> Панель владельца</button>
+            <button class="btn" onclick="showPage('admins')"><i class="fas fa-users"></i> Список админов</button>
+            <button class="btn btn-warning" onclick="showPage('tgk')"><i class="fas fa-telegram"></i> ТГК</button>
+            <button class="btn btn-danger" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+        </div>
+        
+        <div class="info-section">
+            <h3>🌿 О боте</h3>
+            <p><strong>The Garden of Eden</strong> — это райский уголок для общения с профессиональными администраторами.</p>
+        </div>
+    </div>
+
+    <!-- ПРАЙС -->
+    <div class="page" id="page-price">
+        <button class="btn btn-sm" onclick="goHome()"><i class="fas fa-arrow-left"></i> Назад</button>
+        <div class="card mt-16">
+            <h2 class="card-title"><i class="fas fa-tag" style="color:#059669;"></i> Прайс-лист</h2>
+            <div class="price-grid">
+                <div class="price-card">
+                    <span class="price-title">📝 Анкета</span>
+                    <span class="price-value">50 ₽</span>
+                </div>
+                <div class="price-card">
+                    <span class="price-title">💬 Общение (30 мин)</span>
+                    <span class="price-value">200 ₽</span>
+                </div>
+                <div class="price-card">
+                    <span class="price-title">🎮 Игровой сеанс</span>
+                    <span class="price-value">300 ₽</span>
+                </div>
+                <div class="price-card">
+                    <span class="price-title">📞 Консультация</span>
+                    <span class="price-value">150 ₽</span>
+                </div>
+                <div class="price-card">
+                    <span class="price-title">📹 Видеозвонок</span>
+                    <span class="price-value">400 ₽</span>
+                </div>
+                <div class="price-card">
+                    <span class="price-title">🎵 Голосовое сообщение</span>
+                    <span class="price-value">30 ₽</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ТГК -->
+    <div class="page" id="page-tgk">
+        <button class="btn btn-sm" onclick="goHome()"><i class="fas fa-arrow-left"></i> Назад</button>
+        <div class="card mt-16">
+            <h2 class="card-title"><i class="fab fa-telegram" style="color:#7C3AED;"></i> Telegram Канал</h2>
+            <div class="text-center" style="padding: 20px 0;">
+                <i class="fab fa-telegram" style="font-size: 4rem; color: #7C3AED;"></i>
+                <h3 style="margin: 16px 0; color: #2D6A4F;">Подписывайтесь на наш канал!</h3>
+                <p style="color: #475569; max-width: 400px; margin: 0 auto 20px;">
+                    Здесь вы найдёте актуальные новости, анонсы и полезную информацию от The Garden of Eden.
+                </p>
+                <a href="https://t.me/garden_edem_bott" target="_blank" class="btn btn-primary" style="font-size: 1.2rem; padding: 14px 40px;">
+                    <i class="fab fa-telegram"></i> Перейти в ТГК
+                </a>
+                <p style="margin-top: 16px; font-size: 0.85rem; color: #94a3b8;">
+                    @garden_edem_bott
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- АНКЕТА -->
+    <div class="page" id="page-anketa">
+        <button class="btn btn-sm" onclick="goHome()"><i class="fas fa-arrow-left"></i> Назад</button>
+        <div class="card mt-16">
+            <h2 class="card-title"><i class="fas fa-clipboard-list" style="color:#7C3AED;"></i> Заполните анкету</h2>
+            
+            <!-- Выбор направления -->
+            <div class="form-group">
+                <label>Выберите направление *</label>
+                <select id="anketa-direction" onchange="toggleAnketaSections()">
+                    <option value="support">Поддержка</option>
+                    <option value="communication">Общение</option>
+                    <option value="all">Всё вместе</option>
+                </select>
+            </div>
+            
+            <!-- Секция для Поддержки -->
+            <div id="anketa-support" class="anketa-section">
+                <div class="anketa-title">📋 Анкета для администратора, специализирующегося на поддержке</div>
+                <div class="anketa-desc">Уважаемый кандидат, пожалуйста, максимально подробно и честно ответьте на следующие вопросы. Ваши ответы помогут мне лучше понять ваш опыт, навыки и потенциал.</div>
+                
+                <div class="form-group"><label>1. Юз, возраст, имя и тег с которым будете работать *</label><textarea id="anketa-support-1" placeholder="Напишите ваш юзернейм, возраст, имя и тег..." required></textarea></div>
+                <div class="form-group"><label>2. Ваш Часовой пояс *</label><input type="text" id="anketa-support-2" placeholder="Пример: UTC+3, Москва" required></div>
+                <div class="form-group"><label>3. Наличие опыта работы администратором. Если "Да" где работали, как долго и почему ушли. *</label><textarea id="anketa-support-3" placeholder="Опишите ваш опыт..." required></textarea></div>
+                <div class="form-group"><label>4. Что вам больше всего нравилось и не нравилось в этой работе? *</label><textarea id="anketa-support-4" placeholder="Опишите..." required></textarea></div>
+                <div class="form-group"><label>5. Сколько часов в день/неделю вы готовы стабильно уделять работе? *</label><input type="text" id="anketa-support-5" placeholder="Например: 4 часа в день / 20 часов в неделю" required></div>
+                <div class="form-group"><label>6. Насколько оцениваете свою грамотность ?/10 *</label><input type="text" id="anketa-support-6" placeholder="Например: 8/10" required></div>
+                <div class="form-group"><label>7. Что конкретно вас привлекло в наш бот? *</label><textarea id="anketa-support-7" placeholder="Напишите..." required></textarea></div>
+                <div class="form-group"><label>8. Что такого может сделать пользователь, что вызовет у вас агрессию? *</label><textarea id="anketa-support-8" placeholder="Напишите..." required></textarea></div>
+                <div class="form-group"><label>9. При каких случаях, по вашему мнению, следует позвать владельца при общении с пользователем? *</label><textarea id="anketa-support-9" placeholder="Напишите..." required></textarea></div>
+                <div class="form-group"><label>10. Сможете ли вы отговорить человека от суицида/самоповреждения? *</label><textarea id="anketa-support-10" placeholder="Напишите развёрнутый ответ..." required></textarea></div>
+                <div class="form-group">
+                    <label>11. Поддержать 2 на ваш выбор следующие ситуации, развёрнутым ответом: *</label>
+                    <div style="margin-bottom:8px;padding:12px;background:rgba(239,68,68,0.05);border-radius:12px;border-left:3px solid #EF4444;">
+                        <strong>Ситуация 11.1:</strong><br>Я сейчас по работе в другом городе, ночью, приехала в отель и мне сообщают что мой любимый совершил суицид...
+                    </div>
+                    <div style="margin-bottom:8px;padding:12px;background:rgba(59,130,246,0.05);border-radius:12px;border-left:3px solid #3B82F6;">
+                        <strong>Ситуация 11.2:</strong><br>Много лет подряд меня буллили в школе и увы я никогда не могла постоять за себя...
+                    </div>
+                    <div style="margin-bottom:8px;padding:12px;background:rgba(16,185,129,0.05);border-radius:12px;border-left:3px solid #10B981;">
+                        <strong>Ситуация 11.3:</strong><br>Я устал. Я самый старший из детей, у меня сейчас подготовка к экзаменам и поступление...
+                    </div>
+                    <textarea id="anketa-support-11" placeholder="Напишите развёрнутый ответ на 2 ситуации (укажите номера)..." required></textarea>
+                </div>
+                <div class="form-group"><label>12. Напишите ваше приветствие. (должно быть указано тег, "сменить админа" и ссылку на канал) *</label><textarea id="anketa-support-12" placeholder="Напишите ваше приветствие..." required></textarea></div>
+            </div>
+            
+            <!-- Секция для Общения -->
+            <div id="anketa-communication" class="anketa-section" style="display:none;">
+                <div class="anketa-title">📋 Анкета для администратора, специализирующегося на общении</div>
+                <div class="anketa-desc">Уважаемый кандидат, пожалуйста, максимально подробно и честно ответьте на следующие вопросы. Ваши ответы помогут мне лучше понять ваш опыт, навыки и потенциал.</div>
+                
+                <div class="form-group"><label>1. Юз, возраст, имя и тег с которым будете работать *</label><textarea id="anketa-comm-1" placeholder="Напишите ваш юзернейм, возраст, имя и тег..." required></textarea></div>
+                <div class="form-group"><label>2. Ваш Часовой пояс *</label><input type="text" id="anketa-comm-2" placeholder="Пример: UTC+3, Москва" required></div>
+                <div class="form-group"><label>3. Наличие опыта работы администратором. Если "Да" где работали, как долго и почему ушли. *</label><textarea id="anketa-comm-3" placeholder="Опишите ваш опыт..." required></textarea></div>
+                <div class="form-group"><label>4. Что вам больше всего нравилось и не нравилось в этой работе? *</label><textarea id="anketa-comm-4" placeholder="Опишите..." required></textarea></div>
+                <div class="form-group"><label>5. Сколько часов в день/неделю вы готовы стабильно уделять работе? *</label><input type="text" id="anketa-comm-5" placeholder="Например: 4 часа в день / 20 часов в неделю" required></div>
+                <div class="form-group"><label>6. Что такого может сделать пользователь, что вызовет у вас агрессию? *</label><textarea id="anketa-comm-6" placeholder="Напишите..." required></textarea></div>
+                <div class="form-group"><label>7. Что конкретно вас привлекло в наш бот? *</label><textarea id="anketa-comm-7" placeholder="Напишите..." required></textarea></div>
+                <div class="form-group"><label>8. Назовите 10-12 тем для начала диалога с пользователем *</label><textarea id="anketa-comm-8" placeholder="Перечислите темы..." required></textarea></div>
+                <div class="form-group"><label>9. Что будете делать, если пользователь окажется неразговорчивым? *</label><textarea id="anketa-comm-9a" placeholder="Напишите..." required></textarea></div>
+                <div class="form-group"><label>9. При каких случаях, по твоему мнению, следует позвать владельца при общении с пользователем? *</label><textarea id="anketa-comm-9b" placeholder="Напишите..." required></textarea></div>
+                <div class="form-group"><label>10. Расскажи про то, что кажется тебе интересным или же забавным *</label><textarea id="anketa-comm-10" placeholder="Напишите..." required></textarea></div>
+                <div class="form-group">
+                    <label>11. Напишите развёрнуто на следующую ситуацию: *</label>
+                    <div style="margin-bottom:8px;padding:12px;background:rgba(16,185,129,0.05);border-radius:12px;border-left:3px solid #10B981;">
+                        <strong>Ситуация:</strong><br>В нашем нерабочем чате в течение нескольких дней наблюдается полное затишье. Ваша цель — оживить общение, создать дружелюбную атмосферу и вовлечь как можно больше участников в дискуссию.<br>1. Предложите 2-3 темы для обсуждения, которые, на ваш взгляд, будут интересны админам.<br>2. А теперь выберите одну из предложенных выше тем и напишите вводное сообщение для пользователя.
+                    </div>
+                    <textarea id="anketa-comm-11" placeholder="Напишите развёрнутый ответ..." required></textarea>
+                </div>
+                <div class="form-group"><label>12. Напишите ваше приветствие (должно быть указано тег, "сменить админа" ссылка на ТГК) *</label><textarea id="anketa-comm-12" placeholder="Напишите ваше приветствие..." required></textarea></div>
+            </div>
+            
+            <!-- Секция для Всё вместе -->
+            <div id="anketa-all" class="anketa-section" style="display:none;">
+                <div class="anketa-title">📋 Анкета для администратора (всё вместе)</div>
+                <div class="anketa-desc">Уважаемый кандидат, пожалуйста, максимально подробно и честно ответьте на следующие вопросы. Ваши ответы помогут мне лучше понять ваш опыт, навыки и потенциал.</div>
+                
+                <div class="form-group"><label>1. Юз, возраст, имя и тег с которым будете работать *</label><textarea id="anketa-all-1" placeholder="Напишите ваш юзернейм, возраст, имя и тег..." required></textarea></div>
+                <div class="form-group"><label>2. Ваш Часовой пояс *</label><input type="text" id="anketa-all-2" placeholder="Пример: UTC+3, Москва" required></div>
+                <div class="form-group"><label>3. Наличие опыта работы администратором. Если "Да" где работали, как долго и почему ушли. *</label><textarea id="anketa-all-3" placeholder="Опишите ваш опыт..." required></textarea></div>
+                <div class="form-group"><label>4. Что вам больше всего нравилось и не нравилось в этой работе? *</label><textarea id="anketa-all-4" placeholder="Опишите..." required></textarea></div>
+                <div class="form-group"><label>5. Сколько часов в день/неделю вы готовы стабильно уделять работе? *</label><input type="text" id="anketa-all-5" placeholder="Например: 4 часа в день / 20 часов в неделю" required></div>
+                <div class="form-group"><label>6. Насколько оцениваете свою грамотность ?/10 *</label><input type="text" id="anketa-all-6" placeholder="Например: 8/10" required></div>
+                <div class="form-group"><label>7. Что конкретно вас привлекло в наш бот? *</label><textarea id="anketa-all-7" placeholder="Напишите..." required></textarea></div>
+                <div class="form-group"><label>8. Что такого может сделать пользователь, что вызовет у вас агрессию? *</label><textarea id="anketa-all-8" placeholder="Напишите..." required></textarea></div>
+                <div class="form-group"><label>9. При каких случаях, по вашему мнению, следует позвать владельца при общении с пользователем? *</label><textarea id="anketa-all-9" placeholder="Напишите..." required></textarea></div>
+                <div class="form-group"><label>10. Сможете ли вы отговорить человека от суицида/самоповреждения? *</label><textarea id="anketa-all-10" placeholder="Напишите развёрнутый ответ..." required></textarea></div>
+                <div class="form-group"><label>11. Назовите 10-12 тем для начала диалога с пользователем *</label><textarea id="anketa-all-11a" placeholder="Перечислите темы..." required></textarea></div>
+                <div class="form-group"><label>12. Что будете делать, если пользователь окажется неразговорчивым? *</label><textarea id="anketa-all-12" placeholder="Напишите..." required></textarea></div>
+                <div class="form-group"><label>13. Расскажи про то, что кажется тебе интересным или же забавным *</label><textarea id="anketa-all-13" placeholder="Напишите..." required></textarea></div>
+                <div class="form-group">
+                    <label>14. Напишите развёрнуто на следующую ситуацию: *</label>
+                    <div style="margin-bottom:8px;padding:12px;background:rgba(16,185,129,0.05);border-radius:12px;border-left:3px solid #10B981;">
+                        <strong>Ситуация:</strong><br>В нашем нерабочем чате в течение нескольких дней наблюдается полное затишье...
+                    </div>
+                    <textarea id="anketa-all-14" placeholder="Напишите развёрнутый ответ..." required></textarea>
+                </div>
+                <div class="form-group"><label>15. Напишите ваше приветствие (должно быть указано тег, "сменить админа" ссылка на ТГК) *</label><textarea id="anketa-all-15" placeholder="Напишите ваше приветствие..." required></textarea></div>
+            </div>
+            
+            <button type="button" class="btn btn-primary" onclick="submitNewAnketa()" style="margin-top:16px;"><i class="fas fa-paper-plane"></i> Отправить анкету</button>
+        </div>
+    </div>
+
+    <!-- ТЕХПОДДЕРЖКА (для пользователя) -->
+    <div class="page" id="page-support">
+        <button class="btn btn-sm" onclick="goHome()"><i class="fas fa-arrow-left"></i> Назад</button>
+        <div class="card mt-16">
+            <h2 class="card-title"><i class="fas fa-headset" style="color:#7C3AED;"></i> Техподдержка</h2>
+            <div class="tabs">
+                <button class="btn btn-sm btn-primary" onclick="openSupportTab('complaint')"><i class="fas fa-gavel"></i> Подать жалобу</button>
+                <button class="btn btn-sm btn-success" onclick="openSupportTab('contact')"><i class="fas fa-envelope"></i> Связаться с владельцем</button>
+            </div>
+            <div class="tab-content active" id="tab-complaint">
+                <form id="complaintForm">
+                    <div class="form-group">
+                        <label>Тег администратора (на кого жалоба) *</label>
+                        <input type="text" id="complaint-admin" placeholder="#admin" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Описание нарушения *</label>
+                        <textarea id="complaint-desc" placeholder="Что произошло?" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Скриншоты (ссылки) *</label>
+                        <input type="text" id="complaint-screenshots" placeholder="Ссылки на скриншоты" required>
+                    </div>
+                    <button type="button" class="btn btn-danger" onclick="submitComplaint()"><i class="fas fa-paper-plane"></i> Отправить жалобу</button>
+                </form>
+            </div>
+            <div class="tab-content" id="tab-contact">
+                <form id="ownerMsgForm">
+                    <div class="form-group">
+                        <label>Ваше сообщение владельцу *</label>
+                        <textarea id="owner-msg" placeholder="Опишите, что вам нужно..." required></textarea>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="submitOwnerMessage()"><i class="fas fa-paper-plane"></i> Отправить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- СПИСОК АДМИНОВ -->
+    <div class="page" id="page-admins">
+        <button class="btn btn-sm" onclick="goHome()"><i class="fas fa-arrow-left"></i> Назад</button>
+        <div class="card mt-16">
+            <h2 class="card-title"><i class="fas fa-users" style="color:#7C3AED;"></i> Наши администраторы</h2>
+            <div class="admins-grid" id="adminsList"></div>
+        </div>
+        <div class="modal-overlay" id="reviewsModal">
+            <div class="modal">
+                <h2>📝 Отзывы об админе</h2>
+                <div id="reviewsContent"><p class="text-muted">Загрузка...</p></div>
+                <div class="mt-16 text-center">
+                    <button class="btn btn-sm" onclick="closeReviewsModal()">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ПАНЕЛЬ ВЛАДЕЛЬЦА -->
+    <div class="page" id="page-owner-panel">
+        <button class="btn btn-sm" onclick="goHome()"><i class="fas fa-arrow-left"></i> Назад</button>
+        
+        <div class="card mt-16">
+            <div class="flex-between">
+                <span class="card-title"><i class="fas fa-crown" style="color:#D97706;"></i> Владелец: <strong id="ownerTag">#owner</strong></span>
+                <span class="text-muted">вы также можете брать диалоги</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="card-title"><i class="fas fa-chart-bar" style="color:#7C3AED;"></i> Статистика бота</h3>
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-item">
+                    <div class="stat-number" id="statUsers">0</div>
+                    <div class="stat-label">👤 Всего пользователей</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="statBanned">0</div>
+                    <div class="stat-label">🚫 Заблокировано</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="statActive">0</div>
+                    <div class="stat-label">🟢 Активных диалогов</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="statAdmins">0</div>
+                    <div class="stat-label">👨‍💼 Администраторов</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- НОРМА -->
+        <div class="card">
+            <h3 class="card-title"><i class="fas fa-chart-simple" style="color:#059669;"></i> Норма</h3>
+            <div class="norm-edit">
+                <label>👤 Пользователи:</label>
+                <input type="number" class="norm-input" id="norm-users-target" value="3" min="1" max="10">
+                <label>💬 Сообщения:</label>
+                <input type="number" class="norm-input" id="norm-msgs-target" value="300" min="50" max="1000">
+                <button class="btn btn-sm btn-primary" onclick="updateNormTargets()">Сохранить</button>
+            </div>
+            <div class="progress-container mt-16">
+                <div class="progress-label"><span>👤 Пользователи</span><span id="owner-users-progress">0 / 3</span></div>
+                <div class="progress-bar"><div class="fill" id="owner-users-fill" style="width:0%;"></div></div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-label"><span>💬 Сообщения</span><span id="owner-msgs-progress">0 / 300</span></div>
+                <div class="progress-bar"><div class="fill" id="owner-msgs-fill" style="width:0%;"></div></div>
+            </div>
+            <div class="text-muted mt-16" style="font-size:0.8rem;">
+                🔄 Чистка нормы каждую неделю в понедельник
+            </div>
+        </div>
+
+        <!-- ОБРАЩЕНИЯ В ТЕХПОДДЕРЖКУ -->
+        <div class="card">
+            <h3 class="card-title"><i class="fas fa-ticket-alt" style="color:#EF4444;"></i> Обращения в техподдержку</h3>
+            <div id="ticketsOwnerList">
+                <p class="text-muted">Нет обращений</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="card-title"><i class="fas fa-clock" style="color:#D97706;"></i> Запросы на Рест</h3>
+            <div id="restRequestsList" class="rest-requests-list">
+                <p class="text-muted">Нет запросов на рест</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="card-title"><i class="fas fa-user-plus" style="color:#7C3AED;"></i> Управление админами</h3>
+            <form id="addAdminForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Тег</label>
+                        <input type="text" id="new-admin-tag" placeholder="#username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <input type="password" id="new-admin-password" placeholder="Пароль" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Категория</label>
+                        <select id="new-admin-category">
+                            <option value="support">Поддержка</option>
+                            <option value="communication">Общение</option>
+                            <option value="all">Всё вместе</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="addAdmin()" style="margin-top:22px;">
+                        <i class="fas fa-plus"></i> Добавить
+                    </button>
+                </div>
+            </form>
+            <div id="owner-admins-list" class="mt-16"></div>
+        </div>
+
+        <div class="card">
+            <h3 class="card-title"><i class="fas fa-bullhorn" style="color:#D97706;"></i> Рассылка</h3>
+            <div class="broadcast-area">
+                <div class="form-group">
+                    <label>Текст рассылки *</label>
+                    <textarea id="broadcast-text" placeholder="Введите текст для рассылки (получат все пользователи)..." required></textarea>
+                </div>
+                <button type="button" class="btn btn-warning" onclick="sendBroadcast()">
+                    <i class="fas fa-paper-plane"></i> Отправить рассылку
+                </button>
+                <div id="broadcastStatus" class="mt-16" style="display:none;"></div>
+            </div>
+        </div>
+
+        <div class="panel-grid">
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-comments" style="color:#7C3AED;"></i> Активные диалоги</h3>
+                <div id="owner-dialogs-list"><p class="text-muted">Нет активных диалогов</p></div>
+            </div>
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-list-ul" style="color:#7C3AED;"></i> Логи</h3>
+                <div id="owner-logs" style="max-height:300px;overflow-y:auto;font-size:0.85rem;">
+                    <p class="text-muted">Здесь будут логи...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="card-title"><i class="fas fa-star" style="color:#fbbf24;"></i> Отзывы админов</h3>
+            <button class="btn btn-sm" onclick="viewAllReviews()"><i class="fas fa-eye"></i> Смотреть все отзывы</button>
+            <div id="owner-all-reviews" class="mt-16"></div>
+        </div>
+    </div>
+
+    <!-- ПАНЕЛЬ АДМИНА -->
+    <div class="page" id="page-admin-panel">
+        <button class="btn btn-sm" onclick="goHome()"><i class="fas fa-arrow-left"></i> Назад</button>
+        
+        <div class="card mt-16">
+            <div class="flex-between">
+                <span class="card-title"><i class="fas fa-user-shield" style="color:#7C3AED;"></i> Админ: <strong id="adminTag">#admin</strong></span>
+                <span>Категория: <strong id="adminCategory">поддержка</strong> | Варны: <strong id="adminWarns" style="color:#EF4444;">0</strong></span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="card-title"><i class="fas fa-chart-simple" style="color:#059669;"></i> Моя норма</h3>
+            <div class="progress-container">
+                <div class="progress-label"><span>👤 Пользователи</span><span id="admin-users-progress">0 / 3</span></div>
+                <div class="progress-bar"><div class="fill" id="admin-users-fill" style="width:0%;"></div></div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-label"><span>💬 Сообщения</span><span id="admin-msgs-progress">0 / 300</span></div>
+                <div class="progress-bar"><div class="fill" id="admin-msgs-fill" style="width:0%;"></div></div>
+            </div>
+            <div class="text-muted mt-16" style="font-size:0.8rem;">
+                🔄 Чистка нормы каждую неделю в понедельник
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="card-title"><i class="fas fa-comments" style="color:#7C3AED;"></i> Мои диалоги</h3>
+            <div id="admin-dialogs-list"><p class="text-muted">Нет активных диалогов</p></div>
+        </div>
+
+        <div class="card">
+            <h3 class="card-title"><i class="fas fa-star" style="color:#fbbf24;"></i> Мои отзывы и рейтинг</h3>
+            <p>Средний рейтинг: <strong id="adminRatingDisplay" class="rating-green">5.0 ⭐</strong></p>
+            <div id="admin-reviews-list"><p class="text-muted">Отзывов пока нет</p></div>
+            <div class="mt-16">
+                <label>Фильтр по звёздам:</label>
+                <select id="admin-reviews-filter" onchange="filterAdminReviews()" style="padding:6px 12px;border-radius:12px;border:1px solid rgba(124,58,237,0.15);background:rgba(255,255,255,0.7);color:#1e293b;">
+                    <option value="all">Все</option>
+                    <option value="1">⭐ 1</option>
+                    <option value="2">⭐⭐ 2</option>
+                    <option value="3">⭐⭐⭐ 3</option>
+                    <option value="4">⭐⭐⭐⭐ 4</option>
+                    <option value="5">⭐⭐⭐⭐⭐ 5</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="card-title"><i class="fas fa-redo" style="color:#D97706;"></i> Реста</h3>
+            <p class="text-muted" style="margin-bottom:12px;">Отправить запрос на сброс статистики владельцу</p>
+            <form id="restRequestForm">
+                <div class="form-group">
+                    <label>Ваш тег *</label>
+                    <input type="text" id="rest-admin-tag" readonly style="background:rgba(255,255,255,0.7);color:#1e293b;cursor:not-allowed;">
+                </div>
+                <div class="form-group">
+                    <label>Дата запроса *</label>
+                    <input type="text" id="rest-date" readonly style="background:rgba(255,255,255,0.7);color:#1e293b;cursor:not-allowed;">
+                </div>
+                <div class="form-group">
+                    <label>Рест до (дата) *</label>
+                    <input type="date" id="rest-until" required>
+                </div>
+                <div class="form-group">
+                    <label>Причина реста *</label>
+                    <textarea id="rest-reason" placeholder="Укажите причину запроса на рест..." required></textarea>
+                </div>
+                <button type="button" class="btn btn-warning" onclick="sendRestRequest()">
+                    <i class="fas fa-paper-plane"></i> Отправить запрос на рест
+                </button>
+            </form>
+            <div id="restRequestStatus" class="mt-16" style="display:none;"></div>
+        </div>
+    </div>
+
+    <!-- ЧАТЫ -->
+    <div class="page" id="page-chat-user">
+        <div class="card mt-16" style="padding:0;overflow:hidden;">
+            <div class="chat-container" style="height:600px;">
+                <div class="chat-header">
+                    <div>
+                        <strong id="chatUserAdminTag">#admin</strong>
+                        <span class="text-muted" style="margin-left:10px;" id="chatUserCategory">поддержка</span>
+                    </div>
+                    <div class="chat-header-actions">
+                        <span class="text-muted" id="chatUserDialogId">ID: #123</span>
+                        <button class="btn btn-danger btn-sm" onclick="completeDialogUser()">
+                            <i class="fas fa-check"></i> Завершить
+                        </button>
+                    </div>
+                </div>
+                <div class="chat-messages" id="chatUserMessages"></div>
+                <div class="chat-input-area">
+                    <div class="input-wrapper">
+                        <input type="text" id="chatUserInput" placeholder="Введите сообщение..." onkeydown="if(event.key==='Enter') sendUserMessage()">
+                        <label class="file-btn" title="Прикрепить файл">
+                            <i class="fas fa-paperclip"></i>
+                            <input type="file" id="chatUserFile" style="display:none;" accept="image/*,video/*,audio/*" onchange="handleUserFileUpload(event)">
+                        </label>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="sendUserMessage()"><i class="fas fa-paper-plane"></i> Отправить</button>
+                </div>
+                <div class="spam-warning" id="spamWarningUser">⚠️ Антиспам: подождите 10 секунд между сообщениями!</div>
+                <div class="privacy-warning" id="privacyWarningUser">⚠️ Запрещено спрашивать личную информацию!</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page" id="page-chat-admin">
+        <div class="card mt-16" style="padding:0;overflow:hidden;">
+            <div class="chat-container" style="height:600px;">
+                <div class="chat-header">
+                    <div>
+                        <button class="btn btn-sm btn-back" onclick="closeAdminChat()" style="margin-right:10px;"><i class="fas fa-arrow-left"></i> Назад</button>
+                        <strong id="chatAdminTag">#admin</strong>
+                        <span class="text-muted" style="margin-left:10px;" id="chatAdminCategory">поддержка</span>
+                    </div>
+                    <div class="chat-header-actions">
+                        <span class="text-muted" id="chatAdminDialogId">ID: #123</span>
+                        <button class="btn btn-danger btn-sm" onclick="banUserFromChat()">
+                            <i class="fas fa-ban"></i> Забанить
+                        </button>
+                        <button class="btn btn-success btn-sm" onclick="completeAdminDialog()">
+                            <i class="fas fa-check"></i> Завершить
+                        </button>
+                    </div>
+                </div>
+                <div class="chat-messages" id="chatAdminMessages"></div>
+                <div class="chat-input-area">
+                    <div class="input-wrapper">
+                        <input type="text" id="chatAdminInput" placeholder="Введите сообщение..." onkeydown="if(event.key==='Enter') sendAdminMessage()">
+                        <label class="file-btn" title="Прикрепить файл">
+                            <i class="fas fa-paperclip"></i>
+                            <input type="file" id="chatAdminFile" style="display:none;" accept="image/*,video/*,audio/*" onchange="handleAdminFileUpload(event)">
+                        </label>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="sendAdminMessage()"><i class="fas fa-paper-plane"></i> Отправить</button>
+                </div>
+                <div class="spam-warning" id="spamWarningAdmin">⚠️ Антиспам: подождите 10 секунд между сообщениями!</div>
+                <div class="privacy-warning" id="privacyWarningAdmin">⚠️ Запрещено спрашивать личную информацию!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКА ДЛЯ ПРОСМОТРА ТИКЕТА ВЛАДЕЛЬЦЕМ -->
+    <div class="modal-overlay" id="ticketOwnerModal">
+        <div class="modal">
+            <h2>💬 Обращение #<span id="ticketOwnerModalId"></span></h2>
+            <div id="ticketOwnerContent"></div>
+            <div class="mt-16 text-center">
+                <button class="btn btn-sm" onclick="closeTicketOwnerModal()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛКИ -->
+    <div class="modal-overlay" id="banModal">
+        <div class="modal">
+            <h2>🚫 Забанить пользователя</h2>
+            <p class="text-center text-muted">Укажите причину бана</p>
+            <div class="form-group">
+                <label>Причина бана *</label>
+                <textarea id="ban-reason" placeholder="Укажите нарушения и причину бана..." required></textarea>
+            </div>
+            <button class="btn btn-danger" onclick="confirmBan()"><i class="fas fa-ban"></i> Забанить</button>
+            <button class="btn btn-sm" onclick="closeBanModal()" style="margin-top:10px;display:block;width:100%;">Отмена</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="ratingModal">
+        <div class="modal">
+            <h2>⭐ Оцените диалог</h2>
+            <p class="text-center text-muted">Как вам общение с администратором?</p>
+            <div class="stars" id="ratingStars">
+                <span class="star" data-value="1" onclick="setRating(1)">★</span>
+                <span class="star" data-value="2" onclick="setRating(2)">★</span>
+                <span class="star" data-value="3" onclick="setRating(3)">★</span>
+                <span class="star" data-value="4" onclick="setRating(4)">★</span>
+                <span class="star" data-value="5" onclick="setRating(5)">★</span>
+            </div>
+            <div id="ratingError" style="color:#DC2626;display:none;text-align:center;margin:8px 0;">⚠️ Выберите оценку!</div>
+            <div class="form-group">
+                <label>Ваш отзыв *</label>
+                <textarea id="ratingReview" placeholder="Напишите, что понравилось или не понравилось..." required></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="submitRating()"><i class="fas fa-paper-plane"></i> Отправить оценку</button>
+            <button class="btn btn-sm" onclick="closeRatingModal()" style="margin-top:10px;display:block;width:100%;">Пропустить</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="dialogViewModal">
+        <div class="modal">
+            <h2>💬 Просмотр диалога</h2>
+            <div id="dialogViewContent"></div>
+            <div class="mt-16 text-center">
+                <button class="btn btn-sm" onclick="closeDialogView()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="warnModal">
+        <div class="modal">
+            <h2>⚠️ Выдать варн</h2>
+            <p class="text-center text-muted">Укажите причину выдачи варна</p>
+            <div class="form-group">
+                <label>Причина варна *</label>
+                <textarea id="warn-reason-input" placeholder="Укажите причину выдачи варна..." required></textarea>
+            </div>
+            <button class="btn btn-warning" onclick="confirmWarn()"><i class="fas fa-exclamation-triangle"></i> Выдать варн</button>
+            <button class="btn btn-sm" onclick="closeWarnModal()" style="margin-top:10px;display:block;width:100%;">Отмена</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// ============================================================
+// ВХОД И РОЛИ
+// ============================================================
+
+var currentRole = null; // 'user', 'admin', 'owner'
+var currentUser = null;
+var NORM_TARGETS = { users: 3, messages: 300 };
+
+function loginAsUser() {
+    currentRole = 'user';
+    showPage('home-user');
+}
+
+function loginAsAdmin() {
+    // Проверяем, есть ли админ с тегом
+    var tag = prompt('Введите ваш тег (например: #alex_support):');
+    if (!tag) return;
+    var admin = getAdminByTag(tag);
+    if (admin && !admin.banned) {
+        currentRole = 'admin';
+        currentUser = admin;
+        document.getElementById('adminHomeTag').textContent = admin.tag;
+        showPage('home-admin');
+        // Если админ в панели - обновляем
+        if (document.getElementById('page-admin-panel').classList.contains('active')) {
+            renderAdminPanel();
+        }
+    } else if (admin && admin.banned) {
+        showNotification('❌ Этот админ забанен!', 'error');
+    } else {
+        showNotification('❌ Админ не найден или неверный тег!', 'error');
+    }
+}
+
+function loginAsOwner() {
+    var pass = prompt('Введите пароль владельца:');
+    if (pass === OWNER_PASSWORD) {
+        currentRole = 'owner';
+        showPage('home-owner');
+        renderOwnerPanel();
+    } else if (pass !== null) {
+        showNotification('❌ Неверный пароль!', 'error');
+    }
+}
+
+function logout() {
+    currentRole = null;
+    currentUser = null;
+    showPage('login');
+}
+
+function goHome() {
+    if (currentRole === 'user') showPage('home-user');
+    else if (currentRole === 'admin') showPage('home-admin');
+    else if (currentRole === 'owner') showPage('home-owner');
+    else showPage('login');
+}
+
+// ============================================================
+// ДАННЫЕ
+// ============================================================
+
+var DATA = {
+    admins: [
+        { id: 1, tag: '#alex_support', password: '123', category: 'поддержка', rating: 4.7, warns: 0, warnReasons: [], banned: false, onRest: false, restUntil: '' },
+        { id: 2, tag: '#maria_chat', password: '123', category: 'общение', rating: 3.2, warns: 0, warnReasons: [], banned: false, onRest: false, restUntil: '' },
+        { id: 3, tag: '#dmitry_all', password: '123', category: 'всё вместе', rating: 5.0, warns: 0, warnReasons: [], banned: false, onRest: false, restUntil: '' },
+        { id: 4, tag: '#elena_support', password: '123', category: 'поддержка', rating: 2.1, warns: 0, warnReasons: [], banned: false, onRest: false, restUntil: '' },
+    ],
+    users: [
+        { id: 1, username: '#user1', name: 'Иван', age: 25, city: 'Москва', banned: false },
+        { id: 2, username: '#user2', name: 'Мария', age: 22, city: 'СПб', banned: false },
+        { id: 3, username: '#user3', name: 'Алексей', age: 28, city: 'Казань', banned: true },
+        { id: 4, username: '#user4', name: 'Елена', age: 24, city: 'Новосибирск', banned: false },
+        { id: 5, username: '#user5', name: 'Дмитрий', age: 30, city: 'Екатеринбург', banned: false },
+    ],
+    reviews: [
+        { id: 1, adminId: 1, userId: 101, rating: 5, comment: 'Отличный админ, помог быстро!' },
+        { id: 2, adminId: 1, userId: 102, rating: 4, comment: 'Хорошо, но мог бы отвечать быстрее.' },
+        { id: 3, adminId: 2, userId: 103, rating: 3, comment: 'Нормально, но не очень внимательный.' },
+        { id: 4, adminId: 2, userId: 104, rating: 2, comment: 'Был груб, не понравилось.' },
+        { id: 5, adminId: 3, userId: 105, rating: 5, comment: 'Всё супер, лучший админ!' },
+        { id: 6, adminId: 3, userId: 106, rating: 5, comment: 'Очень приятный человек.' },
+        { id: 7, adminId: 4, userId: 107, rating: 1, comment: 'Ужасно, не рекомендую.' },
+        { id: 8, adminId: 4, userId: 108, rating: 2, comment: 'Мог бы лучше.' },
+    ],
+    dialogs: [
+        { id: 1, adminId: 1, userId: 201, status: 'active', messages: [] },
+        { id: 2, adminId: 2, userId: 202, status: 'active', messages: [] },
+        { id: 3, adminId: 3, userId: 203, status: 'active', messages: [] },
+    ],
+    logs: [
+        { type: 'anketa', data: 'Пользователь #user1 заполнил анкету: Иван, 25 лет', time: '10:00' },
+        { type: 'anketa', data: 'Пользователь #user2 заполнил анкету: Мария, 22 года', time: '10:30' },
+    ],
+    norms: {
+        owner: { users: 1, messages: 45, lastReset: new Date().toISOString() },
+        admin_1: { users: 0, messages: 0, lastReset: new Date().toISOString() },
+        admin_2: { users: 0, messages: 0, lastReset: new Date().toISOString() },
+        admin_3: { users: 0, messages: 0, lastReset: new Date().toISOString() },
+        admin_4: { users: 0, messages: 0, lastReset: new Date().toISOString() },
+    },
+    complaints: [],
+    ownerMessages: [],
+    broadcasts: [],
+    adminBroadcasts: {},
+    messageTimestamps: {},
+    privacyViolations: {},
+    bannedUsers: ['#user3'],
+    restRequests: [],
+    tickets: [],
+    ticketMessages: {},
+    ticketIdCounter: 100,
+    warnTargetId: null,
+    repliedTickets: [],
+    userBroadcasts: [],
+};
+
+var OWNER_PASSWORD = 'admin123';
+var currentDialogId = null;
+var currentAdminId = null;
+var ratingValue = 0;
+var pendingDialogId = null;
+var isOwnerInChat = false;
+var currentAdminUser = null;
+var chatMode = 'user';
+var banTargetDialogId = null;
+var warnTargetId = null;
+
+// ============================================================
+// НОРМА
+// ============================================================
+
+function updateNormTargets() {
+    var users = parseInt(document.getElementById('norm-users-target').value) || 3;
+    var msgs = parseInt(document.getElementById('norm-msgs-target').value) || 300;
+    if (users < 1) users = 1;
+    if (msgs < 10) msgs = 10;
+    NORM_TARGETS.users = users;
+    NORM_TARGETS.messages = msgs;
+    showNotification('✅ Норма обновлена: ' + users + ' пользователей / ' + msgs + ' сообщений', 'success');
+    renderOwnerPanel();
+    renderAdminPanel();
+}
+
+function getNormTargets() {
+    return NORM_TARGETS;
+}
+
+// ============================================================
+// ЧИСТКА НОРМЫ
+// ============================================================
+
+function checkAndResetNorms() {
+    var now = new Date();
+    var day = now.getDay();
+    var todayStr = now.toDateString();
+    var targets = getNormTargets();
+    
+    if (day === 1) {
+        for (var key in DATA.norms) {
+            var norm = DATA.norms[key];
+            if (norm.lastReset) {
+                var lastReset = new Date(norm.lastReset);
+                if (lastReset.toDateString() !== todayStr) {
+                    var usersDone = norm.users >= targets.users;
+                    var msgsDone = norm.messages >= targets.messages;
+                    
+                    if (!usersDone || !msgsDone) {
+                        if (key !== 'owner') {
+                            var adminId = parseInt(key.split('_')[1]);
+                            var admin = getAdminById(adminId);
+                            if (admin && !admin.banned) {
+                                admin.warns += 1;
+                                var reason = 'Не выполнена норма за неделю (пользователи: ' + norm.users + '/' + targets.users + ', сообщения: ' + norm.messages + '/' + targets.messages + ')';
+                                admin.warnReasons.push({ reason: reason, date: formatDate(), time: formatTime() });
+                                
+                                DATA.logs.unshift({
+                                    type: 'system',
+                                    data: '⚠️ ' + admin.tag + ' получил варн за невыполнение нормы. Причина: ' + reason,
+                                    time: formatTime()
+                                });
+                                
+                                showNotification('⚠️ ' + admin.tag + ' получил варн за невыполнение нормы! (' + admin.warns + '/3)', 'warning');
+                                
+                                if (admin.warns >= 3) {
+                                    admin.banned = true;
+                                    DATA.logs.unshift({
+                                        type: 'system',
+                                        data: '🚫 ' + admin.tag + ' забанен за 3 варна!',
+                                        time: formatTime()
+                                    });
+                                    showNotification('🚫 ' + admin.tag + ' ЗАБАНЕН за 3 варна!', 'error');
+                                    // Удаляем админа из списка при 3 варнах
+                                    var adminIndex = DATA.admins.indexOf(admin);
+                                    if (adminIndex !== -1) {
+                                        DATA.admins.splice(adminIndex, 1);
+                                        showNotification('🗑️ ' + admin.tag + ' удалён из системы!', 'error');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    norm.users = 0;
+                    norm.messages = 0;
+                    norm.lastReset = now.toISOString();
+                }
+            } else {
+                norm.lastReset = now.toISOString();
+            }
+        }
+        renderOwnerPanel();
+        renderAdminPanel();
+        renderAdminsList();
+        renderRestList();
+        updateStats();
+    }
+}
+
+setInterval(checkAndResetNorms, 300000);
+setTimeout(checkAndResetNorms, 1000);
+
+// ============================================================
+// УВЕДОМЛЕНИЯ
+// ============================================================
+
+function showNotification(message, type) {
+    type = type || 'info';
+    var existing = document.querySelector('.notification');
+    if (existing) existing.remove();
+    var div = document.createElement('div');
+    div.className = 'notification ' + type;
+    div.textContent = message;
+    document.body.appendChild(div);
+    setTimeout(function() { div.remove(); }, 4000);
+}
+
+// ============================================================
+// НАВИГАЦИЯ
+// ============================================================
+
+function showPage(pageId) {
+    var pages = document.querySelectorAll('.page');
+    for (var i = 0; i < pages.length; i++) {
+        pages[i].classList.remove('active');
+    }
+    var page = document.getElementById('page-' + pageId);
+    if (page) page.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (pageId === 'admins' || pageId === 'home-user' || pageId === 'home-admin' || pageId === 'home-owner') {
+        renderAdminsList();
+        renderRestList();
+    }
+    if (pageId === 'owner-panel') {
+        renderOwnerPanel();
+    }
+    if (pageId === 'admin-panel') {
+        renderAdminPanel();
+        document.getElementById('rest-admin-tag').value = currentAdminUser ? currentAdminUser.tag : '';
+        document.getElementById('rest-date').value = formatDate();
+    }
+    if (pageId === 'home-admin') {
+        document.getElementById('adminHomeTag').textContent = currentAdminUser ? currentAdminUser.tag : '#admin';
+    }
+}
+
+// ============================================================
+// ОТОБРАЖЕНИЕ РЕСТОВ
+// ============================================================
+
+function renderRestList() {
+    var container = document.getElementById('restListContainer');
+    if (!container) return;
+    var onRestAdmins = [];
+    for (var i = 0; i < DATA.admins.length; i++) {
+        if (DATA.admins[i].onRest && !DATA.admins[i].banned) {
+            onRestAdmins.push(DATA.admins[i]);
+        }
+    }
+    
+    if (onRestAdmins.length === 0) {
+        container.innerHTML = '<div class="rest-empty">Нет администраторов в ресте</div>';
+        return;
+    }
+    
+    var html = '';
+    for (var i = 0; i < onRestAdmins.length; i++) {
+        var restUntil = onRestAdmins[i].restUntil || 'не указано';
+        var dateParts = restUntil.split('-');
+        var displayDate = dateParts.length === 3 ? dateParts[2] + '.' + dateParts[1] : restUntil;
+        html += '<div class="rest-item"><span class="rest-tag">' + onRestAdmins[i].tag + '</span><span class="rest-info">⏳ В ресте до ' + displayDate + '</span></div>';
+    }
+    container.innerHTML = html;
+}
+
+// ============================================================
+// АНКЕТА
+// ============================================================
+
+function toggleAnketaSections() {
+    var direction = document.getElementById('anketa-direction').value;
+    document.getElementById('anketa-support').style.display = direction === 'support' ? 'block' : 'none';
+    document.getElementById('anketa-communication').style.display = direction === 'communication' ? 'block' : 'none';
+    document.getElementById('anketa-all').style.display = direction === 'all' ? 'block' : 'none';
+}
+
+function submitNewAnketa() {
+    var direction = document.getElementById('anketa-direction').value;
+    var allFields = [];
+    var prefix = '';
+    
+    if (direction === 'support') {
+        prefix = 'support';
+        var required = ['1','2','3','4','5','6','7','8','9','10','11','12'];
+        var allOk = true;
+        for (var i = 0; i < required.length; i++) {
+            var val = document.getElementById('anketa-' + prefix + '-' + required[i]).value.trim();
+            if (!val) {
+                showNotification('⚠️ Заполните поле ' + required[i] + '!', 'error');
+                allOk = false;
+                break;
+            }
+            allFields.push(val);
+        }
+        if (!allOk) return;
+    } else if (direction === 'communication') {
+        prefix = 'comm';
+        var required = ['1','2','3','4','5','6','7','8','9a','9b','10','11','12'];
+        var allOk = true;
+        for (var i = 0; i < required.length; i++) {
+            var val = document.getElementById('anketa-' + prefix + '-' + required[i]).value.trim();
+            if (!val) {
+                showNotification('⚠️ Заполните поле ' + required[i] + '!', 'error');
+                allOk = false;
+                break;
+            }
+            allFields.push(val);
+        }
+        if (!allOk) return;
+    } else if (direction === 'all') {
+        prefix = 'all';
+        var required = ['1','2','3','4','5','6','7','8','9','10','11a','12','13','14','15'];
+        var allOk = true;
+        for (var i = 0; i < required.length; i++) {
+            var val = document.getElementById('anketa-' + prefix + '-' + required[i]).value.trim();
+            if (!val) {
+                showNotification('⚠️ Заполните поле ' + required[i] + '!', 'error');
+                allOk = false;
+                break;
+            }
+            allFields.push(val);
+        }
+        if (!allOk) return;
+    }
+    
+    var directionNames = {
+        'support': 'Поддержка',
+        'communication': 'Общение',
+        'all': 'Всё вместе'
+    };
+    
+    var logEntry = '📋 Новая анкета (' + directionNames[direction] + '): ' + allFields.join(' | ');
+    DATA.logs.unshift({ type: 'anketa', data: logEntry, time: formatTime() });
+    
+    showNotification('✅ Анкета успешно отправлена!', 'success');
+    
+    var inputs = document.querySelectorAll('#page-anketa textarea, #page-anketa input');
+    for (var i = 0; i < inputs.length; i++) {
+        inputs[i].value = '';
+    }
+    
+    setTimeout(function() { goHome(); }, 500);
+}
+
+// ============================================================
+// ТЕХПОДДЕРЖКА (тикеты)
+// ============================================================
+
+function openSupportTab(tab) {
+    var tabs = document.querySelectorAll('.tab-content');
+    for (var i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove('active');
+    }
+    document.getElementById('tab-' + tab).classList.add('active');
+}
+
+function submitComplaint() {
+    var adminTag = document.getElementById('complaint-admin').value;
+    var desc = document.getElementById('complaint-desc').value;
+    var screenshots = document.getElementById('complaint-screenshots').value;
+
+    if (!adminTag || !desc || !screenshots) {
+        showNotification('⚠️ Все поля обязательны!', 'error');
+        return;
+    }
+
+    var ticketId = DATA.ticketIdCounter++;
+    var ticket = {
+        id: ticketId,
+        type: 'complaint',
+        from: 'Пользователь',
+        adminTag: adminTag,
+        description: desc,
+        screenshots: screenshots,
+        time: formatTime(),
+        date: formatDate(),
+        status: 'new',
+        messages: [
+            { from: 'user', text: '📌 Жалоба на ' + adminTag + '\n' + desc + '\n📎 Скриншоты: ' + screenshots, time: formatTime() }
+        ]
+    };
+    DATA.tickets.push(ticket);
+    DATA.ticketMessages[ticketId] = ticket.messages;
+
+    DATA.logs.unshift({
+        type: 'complaint',
+        data: '📩 Жалоба #' + ticketId + ' от пользователя на ' + adminTag + ': ' + desc,
+        time: formatTime()
+    });
+
+    showNotification('📩 Жалоба отправлена! Номер обращения: #' + ticketId, 'success');
+    document.getElementById('complaint-admin').value = '';
+    document.getElementById('complaint-desc').value = '';
+    document.getElementById('complaint-screenshots').value = '';
+    if (currentRole === 'owner') renderOwnerPanel();
+    setTimeout(function() { goHome(); }, 500);
+}
+
+function submitOwnerMessage() {
+    var msg = document.getElementById('owner-msg').value;
+    if (!msg) { showNotification('⚠️ Напишите сообщение!', 'error'); return; }
+
+    var ticketId = DATA.ticketIdCounter++;
+    var ticket = {
+        id: ticketId,
+        type: 'contact',
+        from: 'Пользователь',
+        message: msg,
+        time: formatTime(),
+        date: formatDate(),
+        status: 'new',
+        messages: [
+            { from: 'user', text: '📨 ' + msg, time: formatTime() }
+        ]
+    };
+    DATA.tickets.push(ticket);
+    DATA.ticketMessages[ticketId] = ticket.messages;
+
+    DATA.logs.unshift({
+        type: 'owner_message',
+        data: '📨 Обращение #' + ticketId + ' от пользователя: ' + msg,
+        time: formatTime()
+    });
+
+    showNotification('📨 Сообщение отправлено! Номер обращения: #' + ticketId, 'success');
+    document.getElementById('owner-msg').value = '';
+    if (currentRole === 'owner') renderOwnerPanel();
+    setTimeout(function() { goHome(); }, 500);
+}
+
+// ============================================================
+// АДМИНЫ
+// ============================================================
+
+function renderAdminsList() {
+    var container = document.getElementById('adminsList');
+    if (!container) return;
+    var html = '';
+    for (var i = 0; i < DATA.admins.length; i++) {
+        var admin = DATA.admins[i];
+        if (admin.banned) continue;
+        var rating = admin.rating || 0;
+        var colorClass = getRatingColor(rating);
+        var isOnRest = admin.onRest || false;
+        var restUntil = admin.restUntil || 'не указано';
+        var dateParts = restUntil.split('-');
+        var displayDate = dateParts.length === 3 ? dateParts[2] + '.' + dateParts[1] : restUntil;
+        html += '<div class="admin-card" onclick="' + (isOnRest ? '' : 'openUserChat(' + admin.id + ')') + '">';
+        if (isOnRest) {
+            html += '<div class="rest-badge">⏳ В РЕСТЕ <span class="rest-until">до ' + displayDate + '</span></div>';
+        }
+        html += '<div class="tag">' + admin.tag + '</div>';
+        html += '<div class="category">' + admin.category + '</div>';
+        html += '<div class="rating ' + colorClass + '">' + rating.toFixed(1) + ' ⭐</div>';
+        html += '<button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); viewAdminReviews(' + admin.id + ')">';
+        html += '<i class="fas fa-comment"></i> Отзывы</button>';
+        html += '</div>';
+    }
+    container.innerHTML = html;
+}
+
+function getAdminById(id) {
+    for (var i = 0; i < DATA.admins.length; i++) {
+        if (DATA.admins[i].id === id) return DATA.admins[i];
+    }
+    return null;
+}
+
+function getAdminByTag(tag) {
+    for (var i = 0; i < DATA.admins.length; i++) {
+        if (DATA.admins[i].tag.toLowerCase() === tag.toLowerCase()) return DATA.admins[i];
+    }
+    return null;
+}
+
+function getReviewsForAdmin(adminId) {
+    var result = [];
+    for (var i = 0; i < DATA.reviews.length; i++) {
+        if (DATA.reviews[i].adminId === adminId) result.push(DATA.reviews[i]);
+    }
+    return result;
+}
+
+function getRatingColor(rating) {
+    if (rating >= 4) return 'rating-green';
+    if (rating >= 2) return 'rating-yellow';
+    return 'rating-red';
+}
+
+function formatTime() {
+    var d = new Date();
+    return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
+}
+
+function formatDate() {
+    var d = new Date();
+    return d.getDate().toString().padStart(2, '0') + '.' + (d.getMonth()+1).toString().padStart(2, '0') + '.' + d.getFullYear();
+}
+
+function viewAdminReviews(adminId) {
+    var admin = getAdminById(adminId);
+    if (!admin) return;
+    var reviews = getReviewsForAdmin(adminId);
+    var container = document.getElementById('reviewsContent');
+
+    if (reviews.length === 0) {
+        container.innerHTML = '<p class="text-muted">У этого админа пока нет отзывов.</p>';
+    } else {
+        var html = '<p><strong>' + admin.tag + '</strong> — рейтинг: ' + admin.rating.toFixed(1) + ' ⭐</p><hr style="margin:12px 0;">';
+        for (var i = 0; i < reviews.length; i++) {
+            html += '<div style="padding:8px 0;border-bottom:1px solid #f1f5f9;">';
+            html += '<div>' + '⭐'.repeat(reviews[i].rating) + ' <strong>' + reviews[i].rating + '/5</strong></div>';
+            html += '<p style="font-size:0.9rem;color:#475569;">' + reviews[i].comment + '</p>';
+            html += '</div>';
+        }
+        container.innerHTML = html;
+    }
+    document.getElementById('reviewsModal').classList.add('active');
+}
+
+function closeReviewsModal() {
+    document.getElementById('reviewsModal').classList.remove('active');
+}
+
+// ============================================================
+// СТАТИСТИКА
+// ============================================================
+
+function updateStats() {
+    var totalUsers = DATA.users.length;
+    var bannedUsers = 0;
+    for (var i = 0; i < DATA.users.length; i++) {
+        if (DATA.users[i].banned) bannedUsers++;
+    }
+    bannedUsers += DATA.bannedUsers.length;
+    var activeDialogs = 0;
+    for (var i = 0; i < DATA.dialogs.length; i++) {
+        if (DATA.dialogs[i].status === 'active') activeDialogs++;
+    }
+    var totalAdmins = DATA.admins.length;
+
+    document.getElementById('statUsers').textContent = totalUsers;
+    document.getElementById('statBanned').textContent = bannedUsers;
+    document.getElementById('statActive').textContent = activeDialogs;
+    document.getElementById('statAdmins').textContent = totalAdmins;
+}
+
+// ============================================================
+// АНТИСПАМ
+// ============================================================
+
+var SPAM_LIMIT = 5;
+var SPAM_WINDOW = 10000;
+
+function checkSpam(senderId) {
+    var now = Date.now();
+    if (!DATA.messageTimestamps[senderId]) {
+        DATA.messageTimestamps[senderId] = [];
+    }
+    var timestamps = DATA.messageTimestamps[senderId];
+    var recent = [];
+    for (var i = 0; i < timestamps.length; i++) {
+        if (now - timestamps[i] < SPAM_WINDOW) recent.push(timestamps[i]);
+    }
+    if (recent.length >= SPAM_LIMIT) {
+        return true;
+    }
+    recent.push(now);
+    DATA.messageTimestamps[senderId] = recent;
+    return false;
+}
+
+// ============================================================
+// ФАЙЛЫ В ЧАТЕ
+// ============================================================
+
+function handleUserFileUpload(event) {
+    var file = event.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var fileData = e.target.result;
+        var fileType = file.type;
+        var fileName = file.name;
+        var isImage = fileType.startsWith('image/');
+        var isVideo = fileType.startsWith('video/');
+        var isAudio = fileType.startsWith('audio/');
+        
+        var dialog = null;
+        for (var i = 0; i < DATA.dialogs.length; i++) {
+            if (DATA.dialogs[i].id === currentDialogId) {
+                dialog = DATA.dialogs[i];
+                break;
+            }
+        }
+        if (!dialog) {
+            showNotification('⚠️ Диалог не найден!', 'error');
+            return;
+        }
+        
+        var attachmentHtml = '';
+        if (isImage) {
+            attachmentHtml = '<img src="' + fileData + '" alt="' + fileName + '" />';
+        } else if (isVideo) {
+            attachmentHtml = '<video controls><source src="' + fileData + '" type="' + fileType + '"></video>';
+        } else if (isAudio) {
+            attachmentHtml = '<audio controls><source src="' + fileData + '" type="' + fileType + '"></audio>';
+        } else {
+            attachmentHtml = '<div class="file-attachment">📎 <a href="' + fileData + '" download="' + fileName + '">' + fileName + '</a></div>';
+        }
+        
+        var msgText = '📎 ' + fileName;
+        var fullMsg = msgText + '\n' + attachmentHtml;
+        
+        dialog.messages.push({ from: 'user', text: fullMsg, time: formatTime(), isFile: true, fileData: fileData, fileType: fileType, fileName: fileName });
+        
+        var key = 'admin_' + getAdminById(dialog.adminId).id;
+        if (DATA.norms[key]) DATA.norms[key].messages += 1;
+        DATA.logs.unshift({ type: 'message', data: '📎 Пользователь отправил файл: ' + fileName, time: formatTime() });
+        
+        renderUserMessages(dialog);
+    };
+    reader.readAsDataURL(file);
+    event.target.value = '';
+}
+
+function handleAdminFileUpload(event) {
+    var file = event.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var fileData = e.target.result;
+        var fileType = file.type;
+        var fileName = file.name;
+        var isImage = fileType.startsWith('image/');
+        var isVideo = fileType.startsWith('video/');
+        var isAudio = fileType.startsWith('audio/');
+        
+        var dialog = null;
+        for (var i = 0; i < DATA.dialogs.length; i++) {
+            if (DATA.dialogs[i].id === currentDialogId) {
+                dialog = DATA.dialogs[i];
+                break;
+            }
+        }
+        if (!dialog) {
+            showNotification('⚠️ Диалог не найден!', 'error');
+            return;
+        }
+        
+        var attachmentHtml = '';
+        if (isImage) {
+            attachmentHtml = '<img src="' + fileData + '" alt="' + fileName + '" />';
+        } else if (isVideo) {
+            attachmentHtml = '<video controls><source src="' + fileData + '" type="' + fileType + '"></video>';
+        } else if (isAudio) {
+            attachmentHtml = '<audio controls><source src="' + fileData + '" type="' + fileType + '"></audio>';
+        } else {
+            attachmentHtml = '<div class="file-attachment">📎 <a href="' + fileData + '" download="' + fileName + '">' + fileName + '</a></div>';
+        }
+        
+        var msgText = '📎 ' + fileName;
+        var fullMsg = msgText + '\n' + attachmentHtml;
+        
+        dialog.messages.push({ from: 'admin', text: fullMsg, time: formatTime(), isFile: true, fileData: fileData, fileType: fileType, fileName: fileName });
+        
+        var admin = getAdminById(dialog.adminId);
+        var key = 'admin_' + admin.id;
+        if (DATA.norms[key]) DATA.norms[key].messages += 1;
+        DATA.logs.unshift({ type: 'message', data: '📎 ' + admin.tag + ' отправил файл: ' + fileName, time: formatTime() });
+        
+        renderAdminMessages(dialog);
+    };
+    reader.readAsDataURL(file);
+    event.target.value = '';
+}
+
+// ============================================================
+// ЧАТ ПОЛЬЗОВАТЕЛЯ
+// ============================================================
+
+function openUserChat(adminId) {
+    var admin = getAdminById(adminId);
+    if (!admin) return;
+    if (admin.banned) {
+        showNotification('🚫 Этот админ забанен!', 'error');
+        return;
+    }
+    if (admin.onRest) {
+        showNotification('⏳ Этот админ в ресте!', 'warning');
+        return;
+    }
+
+    chatMode = 'user';
+
+    var dialog = null;
+    for (var i = 0; i < DATA.dialogs.length; i++) {
+        if (DATA.dialogs[i].adminId === adminId && DATA.dialogs[i].status === 'active') {
+            dialog = DATA.dialogs[i];
+            break;
+        }
+    }
+    if (!dialog) {
+        dialog = {
+            id: Date.now(),
+            adminId: adminId,
+            userId: 999,
+            status: 'active',
+            messages: []
+        };
+        DATA.dialogs.push(dialog);
+        DATA.logs.unshift({ type: 'system', data: '🔵 Начат диалог #' + dialog.id + ' с ' + admin.tag, time: formatTime() });
+    }
+
+    currentDialogId = dialog.id;
+    currentAdminId = adminId;
+
+    document.getElementById('chatUserAdminTag').textContent = admin.tag;
+    document.getElementById('chatUserCategory').textContent = admin.category;
+    document.getElementById('chatUserDialogId').textContent = 'ID: #' + dialog.id;
+
+    renderUserMessages(dialog);
+    document.getElementById('chatUserInput').disabled = false;
+    document.getElementById('spamWarningUser').classList.remove('show');
+    document.getElementById('privacyWarningUser').classList.remove('show');
+    showPage('chat-user');
+}
+
+function renderUserMessages(dialog) {
+    var container = document.getElementById('chatUserMessages');
+    if (dialog.messages.length === 0) {
+        container.innerHTML = '<div class="text-muted" style="text-align:center;padding:20px;">Начните диалог с администратором</div>';
+        return;
+    }
+    var html = '';
+    for (var i = 0; i < dialog.messages.length; i++) {
+        var msg = dialog.messages[i];
+        if (msg.from === 'system') {
+            html += '<div class="chat-message system">' + msg.text + '</div>';
+        } else {
+            var isUser = (msg.from === 'user');
+            html += '<div class="chat-message ' + (isUser ? 'user' : 'admin') + '">';
+            html += msg.text;
+            html += '<span class="time">' + (msg.time || formatTime()) + '</span>';
+            html += '</div>';
+        }
+    }
+    container.innerHTML = html;
+    container.scrollTop = container.scrollHeight;
+}
+
+function sendUserMessage() {
+    var input = document.getElementById('chatUserInput');
+    var text = input.value.trim();
+    if (!text) return;
+
+    var dialog = null;
+    for (var i = 0; i < DATA.dialogs.length; i++) {
+        if (DATA.dialogs[i].id === currentDialogId) {
+            dialog = DATA.dialogs[i];
+            break;
+        }
+    }
+    if (!dialog) return;
+
+    var admin = getAdminById(dialog.adminId);
+    if (!admin || admin.banned) {
+        showNotification('🚫 Админ забанен, отправка сообщений невозможна', 'error');
+        return;
+    }
+
+    var senderId = 'user_' + dialog.userId;
+    if (checkSpam(senderId)) {
+        document.getElementById('spamWarningUser').classList.add('show');
+        showNotification('⚠️ Антиспам: подождите 10 секунд!', 'warning');
+        return;
+    }
+    document.getElementById('spamWarningUser').classList.remove('show');
+
+    dialog.messages.push({ from: 'user', text: text, time: formatTime() });
+    
+    var key = 'admin_' + admin.id;
+    if (DATA.norms[key]) DATA.norms[key].messages += 1;
+    DATA.logs.unshift({ type: 'message', data: '💬 Пользователь #' + dialog.userId + ': "' + text + '"', time: formatTime() });
+
+    renderUserMessages(dialog);
+    input.value = '';
+}
+
+function completeDialogUser() {
+    var dialog = null;
+    for (var i = 0; i < DATA.dialogs.length; i++) {
+        if (DATA.dialogs[i].id === currentDialogId) {
+            dialog = DATA.dialogs[i];
+            break;
+        }
+    }
+    if (!dialog) {
+        showNotification('⚠️ Диалог не найден!', 'error');
+        return;
+    }
+    pendingDialogId = currentDialogId;
+    document.getElementById('ratingModal').classList.add('active');
+    ratingValue = 0;
+    var stars = document.querySelectorAll('#ratingStars .star');
+    for (var i = 0; i < stars.length; i++) {
+        stars[i].classList.remove('active');
+    }
+    document.getElementById('ratingReview').value = '';
+    document.getElementById('ratingError').style.display = 'none';
+}
+
+// ============================================================
+// ЧАТ АДМИНА
+// ============================================================
+
+function openAdminChat(adminId, fromOwner) {
+    fromOwner = fromOwner || false;
+    var admin = getAdminById(adminId);
+    if (!admin) return;
+    if (admin.banned) {
+        showNotification('🚫 Этот админ забанен!', 'error');
+        return;
+    }
+
+    chatMode = 'admin';
+    isOwnerInChat = fromOwner;
+
+    var dialog = null;
+    for (var i = 0; i < DATA.dialogs.length; i++) {
+        if (DATA.dialogs[i].adminId === adminId && DATA.dialogs[i].status === 'active') {
+            dialog = DATA.dialogs[i];
+            break;
+        }
+    }
+    if (!dialog) {
+        dialog = {
+            id: Date.now(),
+            adminId: adminId,
+            userId: 999,
+            status: 'active',
+            messages: []
+        };
+        DATA.dialogs.push(dialog);
+        DATA.logs.unshift({ type: 'system', data: '🔵 Начат диалог #' + dialog.id + ' с ' + admin.tag, time: formatTime() });
+    }
+
+    currentDialogId = dialog.id;
+    currentAdminId = adminId;
+
+    document.getElementById('chatAdminTag').textContent = admin.tag;
+    document.getElementById('chatAdminCategory').textContent = admin.category;
+    document.getElementById('chatAdminDialogId').textContent = 'ID: #' + dialog.id;
+
+    var backBtn = document.querySelector('#page-chat-admin .btn-back');
+    if (fromOwner) {
+        backBtn.style.display = 'none';
+    } else {
+        backBtn.style.display = 'inline-flex';
+    }
+
+    renderAdminMessages(dialog);
+    document.getElementById('chatAdminInput').disabled = false;
+    document.getElementById('spamWarningAdmin').classList.remove('show');
+    document.getElementById('privacyWarningAdmin').classList.remove('show');
+    showPage('chat-admin');
+}
+
+function renderAdminMessages(dialog) {
+    var container = document.getElementById('chatAdminMessages');
+    if (dialog.messages.length === 0) {
+        container.innerHTML = '<div class="text-muted" style="text-align:center;padding:20px;">Начните диалог с пользователем</div>';
+        return;
+    }
+    var html = '';
+    for (var i = 0; i < dialog.messages.length; i++) {
+        var msg = dialog.messages[i];
+        if (msg.from === 'system') {
+            html += '<div class="chat-message system">' + msg.text + '</div>';
+        } else {
+            var isUser = (msg.from === 'user');
+            html += '<div class="chat-message ' + (isUser ? 'user' : 'admin') + '">';
+            html += msg.text;
+            html += '<span class="time">' + (msg.time || formatTime()) + '</span>';
+            html += '</div>';
+        }
+    }
+    container.innerHTML = html;
+    container.scrollTop = container.scrollHeight;
+}
+
+function sendAdminMessage() {
+    var input = document.getElementById('chatAdminInput');
+    var text = input.value.trim();
+    if (!text) return;
+
+    var dialog = null;
+    for (var i = 0; i < DATA.dialogs.length; i++) {
+        if (DATA.dialogs[i].id === currentDialogId) {
+            dialog = DATA.dialogs[i];
+            break;
+        }
+    }
+    if (!dialog) return;
+
+    var admin = getAdminById(dialog.adminId);
+    if (!admin || admin.banned) {
+        showNotification('🚫 Админ забанен, отправка сообщений невозможна', 'error');
+        return;
+    }
+
+    var senderId = 'user_' + dialog.userId;
+    if (checkSpam(senderId)) {
+        document.getElementById('spamWarningAdmin').classList.add('show');
+        showNotification('⚠️ Антиспам: подождите 10 секунд!', 'warning');
+        return;
+    }
+    document.getElementById('spamWarningAdmin').classList.remove('show');
+
+    dialog.messages.push({ from: 'admin', text: text, time: formatTime() });
+    
+    var key = 'admin_' + admin.id;
+    if (DATA.norms[key]) DATA.norms[key].messages += 1;
+    DATA.logs.unshift({ type: 'message', data: '💬 ' + admin.tag + ': "' + text + '"', time: formatTime() });
+
+    renderAdminMessages(dialog);
+    input.value = '';
+}
+
+function completeAdminDialog() {
+    var dialog = null;
+    for (var i = 0; i < DATA.dialogs.length; i++) {
+        if (DATA.dialogs[i].id === currentDialogId) {
+            dialog = DATA.dialogs[i];
+            break;
+        }
+    }
+    if (!dialog) {
+        showNotification('⚠️ Диалог не найден!', 'error');
+        return;
+    }
+    dialog.status = 'completed';
+    var admin = getAdminById(dialog.adminId);
+    if (admin) {
+        var key = 'admin_' + admin.id;
+        if (DATA.norms[key]) {
+            DATA.norms[key].users += 1;
+            var msgs = 0;
+            for (var j = 0; j < dialog.messages.length; j++) {
+                if (dialog.messages[j].from !== 'system') msgs++;
+            }
+            DATA.norms[key].messages += msgs;
+        }
+    }
+    showNotification('✅ Диалог завершён!', 'success');
+    updateStats();
+    renderRestList();
+    renderAdminsList();
+    renderOwnerPanel();
+    renderAdminPanel();
+    closeAdminChat();
+}
+
+function closeAdminChat() {
+    currentDialogId = null;
+    currentAdminId = null;
+    isOwnerInChat = false;
+    goHome();
+}
+
+// ============================================================
+// БАН ПОЛЬЗОВАТЕЛЯ
+// ============================================================
+
+function banUserFromChat() {
+    var dialog = null;
+    for (var i = 0; i < DATA.dialogs.length; i++) {
+        if (DATA.dialogs[i].id === currentDialogId) {
+            dialog = DATA.dialogs[i];
+            break;
+        }
+    }
+    if (!dialog) {
+        showNotification('⚠️ Диалог не найден!', 'error');
+        return;
+    }
+    banTargetDialogId = currentDialogId;
+    document.getElementById('banModal').classList.add('active');
+    document.getElementById('ban-reason').value = '';
+}
+
+function closeBanModal() {
+    document.getElementById('banModal').classList.remove('active');
+    banTargetDialogId = null;
+}
+
+function confirmBan() {
+    var reason = document.getElementById('ban-reason').value.trim();
+    if (!reason) {
+        showNotification('⚠️ Укажите причину бана!', 'error');
+        return;
+    }
+
+    var dialog = null;
+    for (var i = 0; i < DATA.dialogs.length; i++) {
+        if (DATA.dialogs[i].id === banTargetDialogId) {
+            dialog = DATA.dialogs[i];
+            break;
+        }
+    }
+    if (!dialog) {
+        showNotification('⚠️ Диалог не найден!', 'error');
+        closeBanModal();
+        return;
+    }
+
+    var user = null;
+    for (var i = 0; i < DATA.users.length; i++) {
+        if (DATA.users[i].id === dialog.userId) {
+            user = DATA.users[i];
+            break;
+        }
+    }
+    if (user) {
+        user.banned = true;
+        DATA.bannedUsers.push(user.username);
+    }
+
+    dialog.messages.push({
+        from: 'system',
+        text: '🚫 Пользователь ' + (user ? user.username : '#' + dialog.userId) + ' ЗАБАНЕН администратором!\nПричина: ' + reason,
+        time: formatTime()
+    });
+    dialog.status = 'completed';
+
+    DATA.logs.unshift({
+        type: 'system',
+        data: '🚫 Пользователь ' + (user ? user.username : '#' + dialog.userId) + ' забанен. Причина: ' + reason,
+        time: formatTime()
+    });
+
+    showNotification('🚫 Пользователь забанен! Причина: ' + reason, 'error');
+    updateStats();
+    
+    if (chatMode === 'admin') {
+        renderAdminMessages(dialog);
+    } else {
+        renderUserMessages(dialog);
+    }
+    
+    closeBanModal();
+    
+    setTimeout(function() {
+        if (currentDialogId === dialog.id) {
+            closeChat();
+        }
+    }, 3000);
+}
+
+function closeChat() {
+    if (chatMode === 'user') {
+        currentDialogId = null;
+        currentAdminId = null;
+        goHome();
+    } else {
+        closeAdminChat();
+    }
+}
+
+// ============================================================
+// ОЦЕНКА
+// ============================================================
+
+function setRating(val) {
+    ratingValue = val;
+    var stars = document.querySelectorAll('#ratingStars .star');
+    for (var i = 0; i < stars.length; i++) {
+        var val2 = parseInt(stars[i].getAttribute('data-value'));
+        if (val2 <= val) {
+            stars[i].classList.add('active');
+        } else {
+            stars[i].classList.remove('active');
+        }
+    }
+    document.getElementById('ratingError').style.display = 'none';
+}
+
+function submitRating() {
+    var reviewText = document.getElementById('ratingReview').value.trim();
+    if (!reviewText) {
+        showNotification('⚠️ Напишите отзыв!', 'error');
+        return;
+    }
+    if (ratingValue === 0) {
+        document.getElementById('ratingError').style.display = 'block';
+        return;
+    }
+
+    var dialog = null;
+    for (var i = 0; i < DATA.dialogs.length; i++) {
+        if (DATA.dialogs[i].id === pendingDialogId) {
+            dialog = DATA.dialogs[i];
+            break;
+        }
+    }
+    if (!dialog) {
+        showNotification('⚠️ Диалог не найден!', 'error');
+        return;
+    }
+
+    var admin = getAdminById(dialog.adminId);
+    if (!admin) return;
+
+    DATA.reviews.push({
+        id: Date.now(),
+        adminId: admin.id,
+        userId: dialog.userId || 999,
+        rating: ratingValue,
+        comment: reviewText
+    });
+
+    var reviews = getReviewsForAdmin(admin.id);
+    var sum = 0;
+    for (var i = 0; i < reviews.length; i++) {
+        sum += reviews[i].rating;
+    }
+    var avg = sum / reviews.length;
+    admin.rating = Math.round(avg * 10) / 10;
+
+    var key = 'admin_' + admin.id;
+    if (DATA.norms[key]) {
+        DATA.norms[key].users += 1;
+        var msgs = 0;
+        for (var i = 0; i < dialog.messages.length; i++) {
+            if (dialog.messages[i].from !== 'system') msgs++;
+        }
+        DATA.norms[key].messages += msgs;
+    }
+
+    dialog.status = 'completed';
+
+    DATA.logs.unshift({
+        type: 'system',
+        data: '✅ Диалог #' + dialog.id + ' с ' + admin.tag + ' завершён. Оценка: ' + ratingValue + '⭐, отзыв: "' + reviewText + '"',
+        time: formatTime()
+    });
+
+    showNotification('✅ Спасибо за оценку! Диалог завершён, норма засчитана.', 'success');
+    closeRatingModal();
+    
+    renderAdminsList();
+    renderOwnerPanel();
+    renderAdminPanel();
+    updateStats();
+    renderRestList();
+    
+    pendingDialogId = null;
+    closeChat();
+}
+
+function closeRatingModal() {
+    document.getElementById('ratingModal').classList.remove('active');
+    ratingValue = 0;
+    document.getElementById('ratingError').style.display = 'none';
+    if (pendingDialogId) {
+        var dialog = null;
+        for (var i = 0; i < DATA.dialogs.length; i++) {
+            if (DATA.dialogs[i].id === pendingDialogId) {
+                dialog = DATA.dialogs[i];
+                break;
+            }
+        }
+        if (dialog) {
+            dialog.status = 'completed';
+            var admin = getAdminById(dialog.adminId);
+            if (admin) {
+                var key = 'admin_' + admin.id;
+                if (DATA.norms[key]) {
+                    DATA.norms[key].users += 1;
+                    var msgs = 0;
+                    for (var j = 0; j < dialog.messages.length; j++) {
+                        if (dialog.messages[j].from !== 'system') msgs++;
+                    }
+                    DATA.norms[key].messages += msgs;
+                }
+            }
+            showNotification('✅ Диалог завершён без оценки.', 'info');
+            updateStats();
+            renderRestList();
+        }
+        pendingDialogId = null;
+        closeChat();
+    }
+}
+
+// ============================================================
+// ПАНЕЛЬ ВЛАДЕЛЬЦА
+// ============================================================
+
+function renderOwnerPanel() {
+    if (currentRole !== 'owner') return;
+    document.getElementById('ownerTag').textContent = '#owner';
+    updateStats();
+
+    var targets = getNormTargets();
+    document.getElementById('norm-users-target').value = targets.users;
+    document.getElementById('norm-msgs-target').value = targets.messages;
+
+    var norm = DATA.norms.owner;
+    var usersPct = Math.min((norm.users / targets.users) * 100, 100);
+    var msgsPct = Math.min((norm.messages / targets.messages) * 100, 100);
+    document.getElementById('owner-users-progress').textContent = norm.users + ' / ' + targets.users;
+    document.getElementById('owner-users-fill').style.width = usersPct + '%';
+    document.getElementById('owner-msgs-progress').textContent = norm.messages + ' / ' + targets.messages;
+    document.getElementById('owner-msgs-fill').style.width = msgsPct + '%';
+
+    // ТИКЕТЫ В ПАНЕЛИ ВЛАДЕЛЬЦА
+    var ticketsContainer = document.getElementById('ticketsOwnerList');
+    if (DATA.tickets.length === 0) {
+        ticketsContainer.innerHTML = '<p class="text-muted">Нет обращений</p>';
+    } else {
+        var htmlT = '';
+        for (var i = DATA.tickets.length - 1; i >= 0; i--) {
+            var t = DATA.tickets[i];
+            var statusClass = t.status === 'new' ? 'new' : 'answered';
+            var statusText = t.status === 'new' ? '🟡 Новое' : '✅ Отвечено';
+            var typeText = t.type === 'complaint' ? '📌 Жалоба' : '📨 Обращение';
+            var preview = t.messages && t.messages.length > 0 ? t.messages[0].text.substring(0, 60) + (t.messages[0].text.length > 60 ? '...' : '') : '';
+            htmlT += '<div class="ticket-card" onclick="viewTicketOwner(' + t.id + ')">';
+            htmlT += '<div class="ticket-header">';
+            htmlT += '<span class="ticket-from">#' + t.id + ' ' + typeText + ' от ' + t.from + '</span>';
+            htmlT += '<span class="ticket-status ' + statusClass + '">' + statusText + '</span>';
+            htmlT += '</div>';
+            htmlT += '<div class="ticket-preview">' + preview + '</div>';
+            htmlT += '<div class="ticket-time">' + t.date + ' ' + t.time + '</div>';
+            htmlT += '</div>';
+        }
+        ticketsContainer.innerHTML = htmlT;
+    }
+
+    // СПИСОК АДМИНОВ
+    var container = document.getElementById('owner-admins-list');
+    var html = '';
+    for (var i = 0; i < DATA.admins.length; i++) {
+        var admin = DATA.admins[i];
+        var isOnRest = admin.onRest || false;
+        var restUntil = admin.restUntil || 'не указано';
+        var dateParts = restUntil.split('-');
+        var displayDate = dateParts.length === 3 ? dateParts[2] + '.' + dateParts[1] : restUntil;
+        var warnReasons = admin.warnReasons || [];
+        var warnText = '';
+        for (var w = 0; w < warnReasons.length; w++) {
+            warnText += '<div style="font-size:0.7rem;color:#DC2626;">⚠️ ' + warnReasons[w].reason + ' (' + warnReasons[w].date + ' ' + warnReasons[w].time + ')</div>';
+        }
+        html += '<div class="flex-between" style="padding:10px 0;border-bottom:1px solid #f1f5f9;">';
+        html += '<div>';
+        html += '<strong style="font-size:1.05rem;">' + admin.tag + '</strong>';
+        if (admin.banned) html += ' <span class="banned-badge">ЗАБАНЕН</span>';
+        if (isOnRest) html += ' <span class="rest-badge">⏳ В РЕСТЕ до ' + displayDate + '</span>';
+        html += ' <span class="category" style="background:rgba(124,58,237,0.1);padding:2px 12px;border-radius:12px;font-size:0.8rem;">' + admin.category + '</span>';
+        html += ' <span class="warn-badge">Варны: ' + admin.warns + '/3</span>';
+        html += ' <span class="' + getRatingColor(admin.rating) + '" style="font-weight:600;font-size:1.05rem;">' + admin.rating.toFixed(1) + '⭐</span>';
+        if (warnText) html += '<div style="margin-top:4px;">' + warnText + '</div>';
+        html += '</div>';
+        html += '<div class="admin-row-actions" style="display:flex;gap:8px;flex-wrap:wrap;">';
+        html += '<button class="btn btn-warning btn-md" onclick="openWarnModal(' + admin.id + ')" ' + (admin.banned ? 'disabled' : '') + ' style="min-width:70px;"><i class="fas fa-exclamation-triangle"></i> Варн</button>';
+        html += '<button class="btn btn-danger btn-md" onclick="deleteAdminFromSystem(' + admin.id + ')" style="min-width:70px;"><i class="fas fa-trash"></i> Удалить</button>';
+        html += '</div></div>';
+    }
+    container.innerHTML = html;
+
+    // ЗАПРОСЫ НА РЕСТ
+    var restContainer = document.getElementById('restRequestsList');
+    if (DATA.restRequests.length === 0) {
+        restContainer.innerHTML = '<p class="text-muted">Нет запросов на рест</p>';
+    } else {
+        var html2 = '';
+        for (var i = 0; i < DATA.restRequests.length; i++) {
+            var req = DATA.restRequests[i];
+            var admin = getAdminById(req.adminId);
+            var dateParts = (req.until || 'не указано').split('-');
+            var displayDate = dateParts.length === 3 ? dateParts[2] + '.' + dateParts[1] : req.until;
+            html2 += '<div class="rest-request-card">';
+            html2 += '<div class="flex-between"><span><span class="rest-admin">' + (admin ? admin.tag : 'Unknown') + '</span></span><span class="rest-date">📅 ' + req.date + ' ' + (req.time || '') + '</span></div>';
+            html2 += '<div class="rest-reason"><strong>Причина:</strong> ' + req.reason + '</div>';
+            html2 += '<div><strong>До:</strong> ' + displayDate + '</div>';
+            html2 += '<div style="margin-top:8px;display:flex;gap:8px;">';
+            html2 += '<button class="btn btn-success btn-sm" onclick="approveRestRequest(' + req.id + ')"><i class="fas fa-check"></i> Одобрить</button>';
+            html2 += '<button class="btn btn-danger btn-sm" onclick="rejectRestRequest(' + req.id + ')"><i class="fas fa-times"></i> Отклонить</button>';
+            html2 += '</div></div>';
+        }
+        restContainer.innerHTML = html2;
+    }
+
+    // АКТИВНЫЕ ДИАЛОГИ (только если есть диалоги)
+    var dialogsContainer = document.getElementById('owner-dialogs-list');
+    var active = [];
+    for (var i = 0; i < DATA.dialogs.length; i++) {
+        if (DATA.dialogs[i].status === 'active') active.push(DATA.dialogs[i]);
+    }
+    if (active.length === 0) {
+        dialogsContainer.innerHTML = '<p class="text-muted">Нет активных диалогов</p>';
+    } else {
+        var html3 = '';
+        for (var i = 0; i < active.length; i++) {
+            var d = active[i];
+            var admin = getAdminById(d.adminId);
+            var lastMsg = d.messages.length > 0 ? d.messages[d.messages.length - 1] : null;
+            var preview = lastMsg ? (lastMsg.from === 'user' ? '👤' : '👨‍💼') + ' ' + (lastMsg.text ? lastMsg.text.substring(0, 50) + (lastMsg.text.length > 50 ? '...' : '') : 'Файл') : 'Нет сообщений';
+            html3 += '<div class="dialog-item" onclick="viewDialog(' + d.id + ')">';
+            html3 += '<div class="flex-between">';
+            html3 += '<span><span class="dialog-admin">' + (admin ? admin.tag : 'Unknown') + '</span> <span class="text-muted" style="font-size:0.75rem;">ID: #' + d.id + '</span></span>';
+            html3 += '<span style="font-size:0.75rem;color:#64748b;">' + d.messages.length + ' сообщ.</span>';
+            html3 += '</div>';
+            html3 += '<div class="dialog-preview">' + preview + '</div>';
+            html3 += '<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">';
+            html3 += '<button class="btn btn-primary btn-xs" onclick="event.stopPropagation(); openAdminChat(' + (admin ? admin.id : 1) + ', true)"><i class="fas fa-comment"></i> Открыть чат</button>';
+            html3 += '</div></div>';
+        }
+        dialogsContainer.innerHTML = html3;
+    }
+
+    // ЛОГИ
+    var logsContainer = document.getElementById('owner-logs');
+    var html4 = '';
+    for (var i = 0; i < Math.min(DATA.logs.length, 30); i++) {
+        html4 += '<div style="padding:4px 0;border-bottom:1px solid rgba(0,0,0,0.03);font-size:0.8rem;">';
+        html4 += '<span class="text-muted">[' + DATA.logs[i].time + ']</span> ' + DATA.logs[i].data;
+        html4 += '</div>';
+    }
+    logsContainer.innerHTML = html4;
+}
+
+// ============================================================
+// ПРОСМОТР ТИКЕТА ВЛАДЕЛЬЦЕМ (С ОТВЕТОМ)
+// ============================================================
+
+function viewTicketOwner(ticketId) {
+    var ticket = null;
+    for (var i = 0; i < DATA.tickets.length; i++) {
+        if (DATA.tickets[i].id === ticketId) {
+            ticket = DATA.tickets[i];
+            break;
+        }
+    }
+    if (!ticket) {
+        showNotification('⚠️ Обращение не найдено!', 'error');
+        return;
+    }
+    
+    document.getElementById('ticketOwnerModalId').textContent = ticketId;
+    var container = document.getElementById('ticketOwnerContent');
+    
+    var messagesHtml = '<div class="ticket-messages-wrapper">';
+    var msgs = DATA.ticketMessages[ticketId] || ticket.messages || [];
+    for (var j = 0; j < msgs.length; j++) {
+        var msg = msgs[j];
+        var cls = msg.from === 'user' ? 'user' : (msg.from === 'admin' ? 'admin' : 'system');
+        messagesHtml += '<div class="ticket-modal-message ' + cls + '">';
+        if (msg.from === 'user') {
+            messagesHtml += '<div style="white-space:pre-wrap;">' + msg.text + '</div>';
+        } else if (msg.from === 'admin') {
+            messagesHtml += '<strong>👨‍💼 Владелец</strong>';
+            messagesHtml += '<div style="white-space:pre-wrap;">' + msg.text + '</div>';
+        } else {
+            messagesHtml += '<div style="white-space:pre-wrap;">' + msg.text + '</div>';
+        }
+        messagesHtml += '<span class="ticket-msg-time">' + (msg.time || formatTime()) + '</span>';
+        messagesHtml += '</div>';
+    }
+    messagesHtml += '</div>';
+    
+    container.innerHTML = messagesHtml;
+    
+    // Если обращение новое - показываем поле для ответа
+    if (ticket.status === 'new') {
+        container.innerHTML += '<div class="ticket-reply-area">';
+        container.innerHTML += '<label>Ответ владельца:</label>';
+        container.innerHTML += '<textarea id="ticketOwnerReply" placeholder="Напишите ответ..." rows="3"></textarea>';
+        container.innerHTML += '<button class="btn btn-primary btn-sm" onclick="replyTicketOwner(' + ticketId + ')"><i class="fas fa-paper-plane"></i> Ответить</button>';
+        container.innerHTML += '</div>';
+    } else {
+        container.innerHTML += '<div class="text-muted" style="text-align:center;padding:8px;">✅ На это обращение уже ответили</div>';
+    }
+    
+    document.getElementById('ticketOwnerModal').classList.add('active');
+}
+
+function replyTicketOwner(ticketId) {
+    var reply = document.getElementById('ticketOwnerReply').value.trim();
+    if (!reply) {
+        showNotification('⚠️ Напишите ответ!', 'error');
+        return;
+    }
+    
+    var ticket = null;
+    for (var i = 0; i < DATA.tickets.length; i++) {
+        if (DATA.tickets[i].id === ticketId) {
+            ticket = DATA.tickets[i];
+            break;
+        }
+    }
+    if (!ticket) return;
+    
+    if (!DATA.ticketMessages[ticketId]) {
+        DATA.ticketMessages[ticketId] = [];
+    }
+    DATA.ticketMessages[ticketId].push({ from: 'admin', text: reply, time: formatTime() });
+    ticket.status = 'answered';
+    ticket.messages = DATA.ticketMessages[ticketId];
+    
+    DATA.logs.unshift({
+        type: 'ticket_reply',
+        data: '📩 Ответ на обращение #' + ticketId + ': ' + reply,
+        time: formatTime()
+    });
+    
+    showNotification('✅ Ответ отправлен!', 'success');
+    viewTicketOwner(ticketId);
+    renderOwnerPanel();
+}
+
+function closeTicketOwnerModal() {
+    document.getElementById('ticketOwnerModal').classList.remove('active');
+}
+
+// ============================================================
+// РАССЫЛКА
+// ============================================================
+
+function sendBroadcast() {
+    var text = document.getElementById('broadcast-text').value.trim();
+    
+    if (!text) {
+        showNotification('⚠️ Введите текст рассылки!', 'error');
+        return;
+    }
+
+    var broadcastData = {
+        id: Date.now(),
+        text: text,
+        time: formatTime(),
+        from: '👑 Владелец'
+    };
+
+    DATA.broadcasts.push(broadcastData);
+    DATA.userBroadcasts.push(broadcastData);
+    
+    for (var i = 0; i < DATA.admins.length; i++) {
+        var admin = DATA.admins[i];
+        if (!DATA.adminBroadcasts[admin.id]) {
+            DATA.adminBroadcasts[admin.id] = [];
+        }
+        DATA.adminBroadcasts[admin.id].push(broadcastData);
+    }
+
+    DATA.logs.unshift({
+        type: 'broadcast',
+        data: '📢 Рассылка всем пользователям: "' + text.substring(0, 50) + (text.length > 50 ? '...' : '') + '"',
+        time: formatTime()
+    });
+
+    var count = DATA.users.filter(function(u) { return !u.banned; }).length;
+    showNotification('📢 Рассылка отправлена ' + count + ' пользователям и ' + DATA.admins.length + ' админам!', 'success');
+    document.getElementById('broadcast-text').value = '';
+    
+    var statusEl = document.getElementById('broadcastStatus');
+    statusEl.style.display = 'block';
+    statusEl.innerHTML = '<div style="color:#059669;font-weight:600;">✅ Рассылка отправлена ' + formatTime() + '</div><div style="font-size:0.85rem;color:#64748b;margin-top:4px;">Получатели: ' + count + ' пользователей, ' + DATA.admins.length + ' админов</div>';
+    setTimeout(function() { statusEl.style.display = 'none'; }, 5000);
+
+    if (currentAdminUser) {
+        renderAdminPanel();
+    }
+}
+
+// ============================================================
+// РЕСТ
+// ============================================================
+
+function sendRestRequest() {
+    if (!currentAdminUser) {
+        showNotification('⚠️ Вы не авторизованы!', 'error');
+        return;
+    }
+
+    var reason = document.getElementById('rest-reason').value.trim();
+    var until = document.getElementById('rest-until').value;
+    
+    if (!reason) {
+        showNotification('⚠️ Укажите причину реста!', 'error');
+        return;
+    }
+    if (!until) {
+        showNotification('⚠️ Укажите дату "До скольки" рест!', 'error');
+        return;
+    }
+
+    var request = {
+        id: Date.now(),
+        adminId: currentAdminUser.id,
+        adminTag: currentAdminUser.tag,
+        reason: reason,
+        until: until,
+        date: formatDate(),
+        time: formatTime(),
+        status: 'pending'
+    };
+
+    DATA.restRequests.push(request);
+
+    DATA.logs.unshift({
+        type: 'system',
+        data: '📩 ' + currentAdminUser.tag + ' запросил рест. Причина: ' + reason + '. До: ' + until,
+        time: formatTime()
+    });
+
+    showNotification('✅ Запрос на рест отправлен владельцу!', 'success');
+    document.getElementById('rest-reason').value = '';
+    document.getElementById('rest-until').value = '';
+    
+    var statusEl = document.getElementById('restRequestStatus');
+    statusEl.style.display = 'block';
+    statusEl.innerHTML = '<div style="color:#059669;font-weight:600;">✅ Запрос отправлен ' + formatTime() + '</div><div style="font-size:0.85rem;color:#64748b;margin-top:4px;">Ожидайте одобрения владельца</div>';
+    setTimeout(function() { statusEl.style.display = 'none'; }, 5000);
+}
+
+function approveRestRequest(requestId) {
+    var request = null;
+    for (var i = 0; i < DATA.restRequests.length; i++) {
+        if (DATA.restRequests[i].id === requestId) {
+            request = DATA.restRequests[i];
+            break;
+        }
+    }
+    if (!request) return;
+
+    var admin = getAdminById(request.adminId);
+    if (admin) {
+        admin.onRest = true;
+        admin.restUntil = request.until || 'не указано';
+        var key = 'admin_' + admin.id;
+        if (DATA.norms[key]) {
+            DATA.norms[key].users = 0;
+            DATA.norms[key].messages = 0;
+        }
+        var newDialogs = [];
+        for (var i = 0; i < DATA.dialogs.length; i++) {
+            if (DATA.dialogs[i].adminId !== admin.id) newDialogs.push(DATA.dialogs[i]);
+        }
+        DATA.dialogs = newDialogs;
+        
+        showNotification('✅ Рест для ' + admin.tag + ' одобрен! Статистика сброшена. До: ' + admin.restUntil, 'success');
+    }
+
+    var newRequests = [];
+    for (var i = 0; i < DATA.restRequests.length; i++) {
+        if (DATA.restRequests[i].id !== requestId) newRequests.push(DATA.restRequests[i]);
+    }
+    DATA.restRequests = newRequests;
+    renderOwnerPanel();
+    renderAdminsList();
+    updateStats();
+    renderRestList();
+}
+
+function rejectRestRequest(requestId) {
+    var request = null;
+    for (var i = 0; i < DATA.restRequests.length; i++) {
+        if (DATA.restRequests[i].id === requestId) {
+            request = DATA.restRequests[i];
+            break;
+        }
+    }
+    if (!request) return;
+
+    var admin = getAdminById(request.adminId);
+    var newRequests = [];
+    for (var i = 0; i < DATA.restRequests.length; i++) {
+        if (DATA.restRequests[i].id !== requestId) newRequests.push(DATA.restRequests[i]);
+    }
+    DATA.restRequests = newRequests;
+    
+    if (admin) {
+        showNotification('❌ Запрос на рест для ' + admin.tag + ' отклонён.', 'warning');
+    }
+    renderOwnerPanel();
+}
+
+// ============================================================
+// УДАЛЕНИЕ АДМИНА ИЗ СИСТЕМЫ
+// ============================================================
+
+function deleteAdminFromSystem(adminId) {
+    if (!confirm('Удалить этого администратора из системы? Это действие нельзя отменить!')) return;
+    
+    var admin = getAdminById(adminId);
+    if (!admin) {
+        showNotification('⚠️ Админ не найден!', 'error');
+        return;
+    }
+    
+    // Удаляем админа из массива
+    var adminIndex = DATA.admins.indexOf(admin);
+    if (adminIndex !== -1) {
+        DATA.admins.splice(adminIndex, 1);
+    }
+    
+    // Удаляем диалоги админа
+    var newDialogs = [];
+    for (var i = 0; i < DATA.dialogs.length; i++) {
+        if (DATA.dialogs[i].adminId !== adminId) {
+            newDialogs.push(DATA.dialogs[i]);
+        }
+    }
+    DATA.dialogs = newDialogs;
+    
+    // Удаляем норму
+    delete DATA.norms['admin_' + adminId];
+    
+    // Если админ в панели - выходим
+    if (currentAdminUser && currentAdminUser.id === adminId) {
+        currentAdminUser = null;
+        currentRole = null;
+        showPage('login');
+    }
+    
+    renderOwnerPanel();
+    renderAdminsList();
+    renderRestList();
+    updateStats();
+    showNotification('🗑️ ' + admin.tag + ' удалён из системы!', 'success');
+}
+
+// ============================================================
+// ВАРН
+// ============================================================
+
+function openWarnModal(adminId) {
+    warnTargetId = adminId;
+    document.getElementById('warnModal').classList.add('active');
+    document.getElementById('warn-reason-input').value = '';
+}
+
+function closeWarnModal() {
+    document.getElementById('warnModal').classList.remove('active');
+    warnTargetId = null;
+}
+
+function confirmWarn() {
+    var reason = document.getElementById('warn-reason-input').value.trim();
+    if (!reason) {
+        showNotification('⚠️ Укажите причину варна!', 'error');
+        return;
+    }
+    
+    var admin = getAdminById(warnTargetId);
+    if (!admin) {
+        showNotification('⚠️ Админ не найден!', 'error');
+        closeWarnModal();
+        return;
+    }
+    
+    if (admin.banned) {
+        showNotification('⚠️ Админ уже забанен!', 'warning');
+        closeWarnModal();
+        return;
+    }
+    
+    admin.warns += 1;
+    admin.warnReasons.push({ reason: reason, date: formatDate(), time: formatTime() });
+    
+    DATA.logs.unshift({
+        type: 'system',
+        data: '⚠️ ' + admin.tag + ' получил варн. Причина: ' + reason + ' (' + admin.warns + '/3)',
+        time: formatTime()
+    });
+    
+    if (admin.warns >= 3) {
+        admin.banned = true;
+        showNotification('🚫 ' + admin.tag + ' ЗАБАНЕН за 3 варна!', 'error');
+        // Удаляем админа из системы
+        var adminIndex = DATA.admins.indexOf(admin);
+        if (adminIndex !== -1) {
+            DATA.admins.splice(adminIndex, 1);
+            showNotification('🗑️ ' + admin.tag + ' удалён из системы!', 'error');
+            // Если админ в панели - выходим
+            if (currentAdminUser && currentAdminUser.id === admin.id) {
+                currentAdminUser = null;
+                currentRole = null;
+                showPage('login');
+            }
+        }
+        updateStats();
+        renderRestList();
+    } else {
+        showNotification('⚠️ ' + admin.tag + ' получил варн! (' + admin.warns + '/3) Причина: ' + reason, 'warning');
+    }
+    
+    closeWarnModal();
+    renderOwnerPanel();
+    renderAdminsList();
+    renderAdminPanel();
+}
+
+// ============================================================
+// ПАНЕЛЬ АДМИНА
+// ============================================================
+
+function renderAdminPanel() {
+    if (!currentAdminUser) return;
+    var admin = currentAdminUser;
+    var targets = getNormTargets();
+
+    var restText = admin.onRest ? ' ⏳ РЕСТ до ' + (admin.restUntil || 'не указано') : '';
+    document.getElementById('adminTag').textContent = admin.tag + (admin.banned ? ' 🚫' : '') + restText;
+    document.getElementById('adminCategory').textContent = admin.category;
+    document.getElementById('adminWarns').textContent = admin.warns + '/3';
+
+    var key = 'admin_' + admin.id;
+    var norm = DATA.norms[key] || { users: 0, messages: 0 };
+    var usersPct = Math.min((norm.users / targets.users) * 100, 100);
+    var msgsPct = Math.min((norm.messages / targets.messages) * 100, 100);
+    document.getElementById('admin-users-progress').textContent = norm.users + ' / ' + targets.users;
+    document.getElementById('admin-users-fill').style.width = usersPct + '%';
+    document.getElementById('admin-msgs-progress').textContent = norm.messages + ' / ' + targets.messages;
+    document.getElementById('admin-msgs-fill').style.width = msgsPct + '%';
+
+    var rating = admin.rating || 0;
+    document.getElementById('adminRatingDisplay').className = getRatingColor(rating);
+    document.getElementById('adminRatingDisplay').textContent = rating.toFixed(1) + ' ⭐';
+
+    var dialogsContainer = document.getElementById('admin-dialogs-list');
+    var myDialogs = [];
+    for (var i = 0; i < DATA.dialogs.length; i++) {
+        if (DATA.dialogs[i].adminId === admin.id && DATA.dialogs[i].status === 'active') {
+            myDialogs.push(DATA.dialogs[i]);
+        }
+    }
+    if (myDialogs.length === 0) {
+        dialogsContainer.innerHTML = '<p class="text-muted">Нет активных диалогов</p>';
+    } else {
+        var html = '';
+        for (var i = 0; i < myDialogs.length; i++) {
+            html += '<div class="flex-between" style="padding:8px 0;border-bottom:1px solid #f1f5f9;">';
+            html += '<span>Диалог #' + myDialogs[i].id + ' — ' + myDialogs[i].messages.length + ' сообщений</span>';
+            html += '<button class="btn btn-primary btn-open-dialog" onclick="openAdminChat(' + admin.id + ')">';
+            html += '<i class="fas fa-comment"></i> Открыть</button>';
+            html += '</div>';
+        }
+        dialogsContainer.innerHTML = html;
+    }
+
+    renderAdminReviews('all');
+}
+
+function renderAdminReviews(filter) {
+    if (!currentAdminUser) return;
+    var admin = currentAdminUser;
+
+    var reviews = getReviewsForAdmin(admin.id);
+    if (filter !== 'all') {
+        var filtered = [];
+        for (var i = 0; i < reviews.length; i++) {
+            if (reviews[i].rating === parseInt(filter)) filtered.push(reviews[i]);
+        }
+        reviews = filtered;
+    }
+
+    var container = document.getElementById('admin-reviews-list');
+    if (reviews.length === 0) {
+        container.innerHTML = '<p class="text-muted">Отзывов с таким фильтром нет.</p>';
+        return;
+    }
+
+    var html = '';
+    for (var i = 0; i < reviews.length; i++) {
+        html += '<div style="padding:6px 0;border-bottom:1px solid #f1f5f9;">';
+        html += '<div>' + '⭐'.repeat(reviews[i].rating) + ' <strong>' + reviews[i].rating + '/5</strong></div>';
+        html += '<p style="font-size:0.9rem;color:#475569;">' + reviews[i].comment + '</p>';
+        html += '</div>';
+    }
+    container.innerHTML = html;
+}
+
+function filterAdminReviews() {
+    var filter = document.getElementById('admin-reviews-filter').value;
+    renderAdminReviews(filter);
+}
+
+// ============================================================
+// ДОБАВЛЕНИЕ АДМИНА
+// ============================================================
+
+function addAdmin() {
+    var tag = document.getElementById('new-admin-tag').value.trim();
+    var password = document.getElementById('new-admin-password').value.trim();
+    var category = document.getElementById('new-admin-category').value;
+
+    if (!tag) {
+        showNotification('⚠️ Введите тег админа!', 'error');
+        return;
+    }
+    if (!password) {
+        showNotification('⚠️ Введите пароль для админа!', 'error');
+        return;
+    }
+    if (getAdminByTag(tag)) {
+        showNotification('⚠️ Такой админ уже существует!', 'error');
+        return;
+    }
+
+    var newAdmin = {
+        id: Date.now(),
+        tag: tag,
+        password: password,
+        category: category,
+        rating: 0,
+        warns: 0,
+        warnReasons: [],
+        banned: false,
+        onRest: false,
+        restUntil: ''
+    };
+    
+    DATA.admins.push(newAdmin);
+    DATA.norms['admin_' + newAdmin.id] = { users: 0, messages: 0, lastReset: new Date().toISOString() };
+    DATA.adminBroadcasts[newAdmin.id] = [];
+
+    document.getElementById('new-admin-tag').value = '';
+    document.getElementById('new-admin-password').value = '';
+    
+    renderOwnerPanel();
+    renderAdminsList();
+    updateStats();
+    renderRestList();
+    
+    showNotification('✅ Админ ' + tag + ' успешно добавлен!', 'success');
+}
+
+// ============================================================
+// ВСЕ ОТЗЫВЫ
+// ============================================================
+
+function viewAllReviews() {
+    var container = document.getElementById('owner-all-reviews');
+    if (DATA.reviews.length === 0) {
+        container.innerHTML = '<p class="text-muted">Отзывов пока нет.</p>';
+        return;
+    }
+    var html = '';
+    for (var i = 0; i < DATA.reviews.length; i++) {
+        var admin = getAdminById(DATA.reviews[i].adminId);
+        html += '<div style="padding:6px 0;border-bottom:1px solid #f1f5f9;font-size:0.9rem;">';
+        html += '<strong>' + (admin ? admin.tag : 'Unknown') + '</strong> ';
+        html += '⭐'.repeat(DATA.reviews[i].rating) + ' (' + DATA.reviews[i].rating + '/5)';
+        html += '<br><span class="text-muted">"' + DATA.reviews[i].comment + '"</span>';
+        html += '</div>';
+    }
+    container.innerHTML = html;
+}
+
+function viewDialog(dialogId) {
+    var dialog = null;
+    for (var i = 0; i < DATA.dialogs.length; i++) {
+        if (DATA.dialogs[i].id === dialogId) {
+            dialog = DATA.dialogs[i];
+            break;
+        }
+    }
+    if (!dialog) {
+        showNotification('⚠️ Диалог не найден!', 'error');
+        return;
+    }
+    
+    var admin = getAdminById(dialog.adminId);
+    var container = document.getElementById('dialogViewContent');
+    
+    var html = '<div style="margin-bottom:12px;">';
+    html += '<strong>' + (admin ? admin.tag : 'Unknown') + '</strong> ';
+    html += '<span class="text-muted">— ID: #' + dialog.id + '</span>';
+    html += '<span class="text-muted" style="margin-left:10px;">' + dialog.messages.length + ' сообщений</span>';
+    if (dialog.status === 'completed') html += ' <span class="banned-badge">ЗАВЕРШЁН</span>';
+    html += '</div>';
+    html += '<div style="max-height:400px;overflow-y:auto;padding:8px;background:#f8fafc;border-radius:12px;">';
+    for (var i = 0; i < dialog.messages.length; i++) {
+        var msg = dialog.messages[i];
+        if (msg.from === 'system') {
+            html += '<div class="dialog-message system">' + msg.text + '</div>';
+        } else {
+            var isUser = (msg.from === 'user');
+            html += '<div class="dialog-message ' + (isUser ? 'user' : 'admin') + '">';
+            html += '<strong>' + (isUser ? '👤 Пользователь' : '👨‍💼 Админ') + '</strong>';
+            html += '<div>' + msg.text + '</div>';
+            html += '<span style="font-size:0.7rem;opacity:0.6;">' + (msg.time || formatTime()) + '</span>';
+            html += '</div>';
+        }
+    }
+    html += '</div>';
+    
+    container.innerHTML = html;
+    document.getElementById('dialogViewModal').classList.add('active');
+}
+
+function closeDialogView() {
+    document.getElementById('dialogViewModal').classList.remove('active');
+}
+
+// ============================================================
+// ИНИЦИАЛИЗАЦИЯ
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    renderAdminsList();
+    renderRestList();
+    for (var i = 0; i < DATA.admins.length; i++) {
+        var a = DATA.admins[i];
+        if (!DATA.norms['admin_' + a.id]) {
+            DATA.norms['admin_' + a.id] = { users: 0, messages: 0, lastReset: new Date().toISOString() };
+        }
+        if (!DATA.adminBroadcasts[a.id]) {
+            DATA.adminBroadcasts[a.id] = [];
+        }
+    }
+    updateStats();
+    checkAndResetNorms();
+    toggleAnketaSections();
+    
+    console.log('🌿 The Garden of Eden загружен!');
+    console.log('🔑 Пароль владельца: admin123');
+    console.log('👨‍💼 Пароль для админов по умолчанию: 123');
+    console.log('📋 Новая анкета загружена!');
+    console.log('🗑️ Админы удаляются при 3 варнах!');
+    console.log('📨 Тикеты приходят в панель владельца!');
+});
+</script>
+</body>
+</html>
